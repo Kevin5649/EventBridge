@@ -10,7 +10,7 @@ obj/
 
 # ASP.NET Core local configuration
 appsettings.json
-appsettings.*.json
+appsettings.Development.json
 
 # Environment files
 .env
