@@ -1,0 +1,24 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.rsuser
+
+# Build output
+bin/
+obj/
+
+# ASP.NET Core local configuration
+appsettings.json
+appsettings.*.json
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

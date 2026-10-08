@@ -1,0 +1,642 @@
+@model EventBridge.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/customer-sidebar.css" asp-append-version="true" />
+
+<div class="dashboard-page admin-dashboard-page">
+
+    <partial name="_UserSidebar" />
+
+    <main class="admin-dashboard-content">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header">
+            <div>
+                <h2>Admin Dashboard</h2>
+                <p>Manage and monitor your EventBridge platform.</p>
+            </div>
+
+            @* <a asp-controller="Account" *@
+            @*    asp-action="Logout" *@
+            @*    class="admin-logout-btn"> *@
+            @*     <i class="bi bi-box-arrow-right"></i> *@
+            @*     Logout *@
+            @* </a> *@
+        </div>
+
+
+        <!-- Statistics -->
+        <div class="admin-stats-grid">
+
+            <div class="admin-stat-card blue">
+                <div>
+                    <span>Total Customers</span>
+                    <strong>@Model.TotalCustomers</strong>
+                </div>
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div class="admin-stat-card green">
+                <div>
+                    <span>Total Planners</span>
+                    <strong>@Model.TotalPlanners</strong>
+                </div>
+                <i class="bi bi-briefcase"></i>
+            </div>
+
+            <div class="admin-stat-card orange">
+                <div>
+                    <span>Pending Verifications</span>
+                    <strong>@Model.PendingVerifications</strong>
+                </div>
+                <i class="bi bi-shield-exclamation"></i>
+            </div>
+
+            <div class="admin-stat-card purple">
+                <div>
+                    <span>Total Bookings</span>
+                    <strong>@Model.TotalBookings</strong>
+                </div>
+                <i class="bi bi-calendar-check"></i>
+            </div>
+
+        </div>
+
+
+        <!-- Secondary Statistics -->
+        <div class="admin-secondary-grid">
+
+            <div class="admin-secondary-card">
+                <div>
+                    <span>Total Payments Processed</span>
+                    <strong>₹@Model.TotalPayments.ToString("N2")</strong>
+                </div>
+                <i class="bi bi-wallet2"></i>
+            </div>
+
+            <div class="admin-secondary-card">
+                <div>
+                    <span>Total Reviews</span>
+                    <strong>@Model.TotalReviews</strong>
+                </div>
+                <i class="bi bi-star"></i>
+            </div>
+
+        </div>
+
+
+        <!-- Success Message -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="admin-alert success">
+                <i class="bi bi-check-circle"></i>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+
+        <!-- Management -->
+        <div class="admin-section-title">
+            <div>
+                <h3>Management</h3>
+                <p>Manage customers, planners and platform activity.</p>
+            </div>
+        </div>
+
+
+        <div class="admin-management-grid">
+
+            <a asp-controller="Admin"
+               asp-action="Customers"
+               class="admin-management-card">
+
+                <div class="admin-management-icon blue-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <div>
+                    <h4>Manage Customers</h4>
+                    <p>View, activate or deactivate customer accounts.</p>
+                </div>
+
+                <i class="bi bi-arrow-right admin-arrow"></i>
+
+            </a>
+
+
+            <a asp-controller="Admin"
+               asp-action="Planners"
+               class="admin-management-card">
+
+                <div class="admin-management-icon green-icon">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+
+                <div>
+                    <h4>Manage Planners</h4>
+                    <p>View, verify, reject or manage planner accounts.</p>
+                </div>
+
+                <i class="bi bi-arrow-right admin-arrow"></i>
+
+            </a>
+
+
+            <a asp-controller="Reports"
+               asp-action="Index"
+               class="admin-management-card">
+
+                <div class="admin-management-icon purple-icon">
+                    <i class="bi bi-bar-chart"></i>
+                </div>
+
+                <div>
+                    <h4>Reports</h4>
+                    <p>View platform reports and activity statistics.</p>
+                </div>
+
+                <i class="bi bi-arrow-right admin-arrow"></i>
+
+            </a>
+
+        </div>
+
+
+        <!-- Charts -->
+        <div class="admin-section-title">
+            <div>
+                <h3>Platform Overview</h3>
+                <p>Monitor bookings, payments and planner verification.</p>
+            </div>
+        </div>
+
+
+        <div class="admin-chart-grid">
+
+            <div class="admin-chart-card large">
+                <div class="admin-card-heading">
+                    <h4>Bookings & Payments</h4>
+                    <span>Last 6 Months</span>
+                </div>
+
+                <div class="admin-chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+
+
+            <div class="admin-chart-card">
+                <div class="admin-card-heading">
+                    <h4>Planner Verification</h4>
+                    <span>Status</span>
+                </div>
+
+                <div class="admin-doughnut-container">
+                    <canvas id="verificationChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="admin-chart-grid">
+
+            <div class="admin-chart-card">
+                <div class="admin-card-heading">
+                    <h4>Planner Bookings</h4>
+                    <span>Top Planners</span>
+                </div>
+
+                <div class="admin-doughnut-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+
+            <div class="admin-chart-card">
+                <div class="admin-card-heading">
+                    <h4>Review Distribution</h4>
+                    <span>Ratings</span>
+                </div>
+
+                <div class="admin-chart-container">
+                    <canvas id="reviewsChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Pending Planner Verification -->
+        <div class="admin-table-card">
+
+            <div class="admin-table-header">
+                <div>
+                    <h3>Pending Planner Verifications</h3>
+                    <p>Review planners before approving them.</p>
+                </div>
+
+                <a asp-controller="Admin"
+                   asp-action="PendingPlanners"
+                   class="admin-view-btn">
+                    View All
+                </a>
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Experience</th>
+                            <th>Avg. Rating</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var planner in Model.RecentPlanners
+                        .Where(p => !p.IsVerified)
+                        .OrderByDescending(p => p.AvgRating)
+                        .ThenByDescending(p => p.ReviewCount))
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>@planner.CompanyName</strong>
+                                </td>
+
+                                <td>
+                                    @planner.User?.Email
+                                </td>
+
+                                <td>
+                                    @planner.Experience years
+                                </td>
+
+                                <td>
+                                    <strong>@planner.AvgRating.ToString("0.0") ⭐</strong>
+                                </td>
+
+                                <td>
+                                    <span class="admin-status pending">
+                                        Pending
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    <div class="admin-action-buttons">
+
+                                        <form asp-controller="Admin"
+                                              asp-action="VerifyPlanner"
+                                              method="post">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@planner.PlannerId" />
+                                            <input type="hidden"
+                                                   name="returnPage"
+                                                   value="AdminIndex" />
+
+                                            <button type="submit"
+                                                    class="admin-action verify">
+                                                Verify
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+
+                        @if (!Model.RecentPlanners.Any(p => !p.IsVerified))
+                        {
+                            <tr>
+                                <td colspan="6" class="admin-empty">
+                                    No pending planner verifications.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- Recent Bookings -->
+        <div class="admin-table-card">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>Recent Bookings</h3>
+                    <p>Latest bookings made on EventBridge.</p>
+                </div>
+
+                <a asp-controller="Reports"
+                   asp-action="Bookings"
+                   class="admin-view-btn">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var booking in Model.RecentBookings)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>#@booking.Id</strong>
+                                </td>
+
+                                <td>
+                                    ₹@booking.TotalAmount.ToString("N2")
+                                </td>
+
+                                <td>
+
+                                    @if (booking.Status == "Completed")
+                                    {
+                                        <span class="admin-status completed">
+                                            Completed
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-status active">
+                                            @booking.Status
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @booking.BookedAt.ToString("MMM dd, yyyy")
+                                </td>
+
+                            </tr>
+                        }
+
+
+                        @if (!Model.RecentBookings.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="admin-empty">
+                                    No recent bookings.
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Bookings & Payments
+            const trendsCanvas = document.getElementById("trendsChart");
+
+            if (trendsCanvas) {
+
+                new Chart(trendsCanvas, {
+
+                    type: "line",
+
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(Model.Labels)),
+
+                        datasets: [
+                            {
+                                label: "Bookings",
+                                data: @Html.Raw(Json.Serialize(Model.BookingsData)),
+                                borderColor: "#52796f",
+                                backgroundColor: "rgba(82,121,111,0.10)",
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            },
+
+                            {
+                                label: "Payments",
+                                data: @Html.Raw(Json.Serialize(Model.PaymentsData)),
+                                borderColor: "#2d6a4f",
+                                backgroundColor: "rgba(45,106,79,0.08)",
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: "index",
+                            intersect: false
+                        }
+                    }
+
+                });
+
+            }
+
+
+            // Verification
+            const verificationCanvas =
+                document.getElementById("verificationChart");
+
+            if (verificationCanvas) {
+
+                new Chart(verificationCanvas, {
+
+                    type: "doughnut",
+
+                    data: {
+                        labels: [
+                            "Verified",
+                            "Pending"
+                        ],
+
+                        datasets: [{
+                            data: [
+        @Model.VerifiedPlanners,
+        @Model.UnverifiedPlanners
+                            ],
+
+                            backgroundColor: [
+                                "#52796f",
+                                "#f4b942"
+                            ],
+
+                            borderWidth: 0
+                        }]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: "68%"
+                    }
+
+                });
+
+            }
+
+
+            // Planner Bookings
+            const categoryCanvas =
+                document.getElementById("categoryChart");
+
+            if (categoryCanvas) {
+
+                new Chart(categoryCanvas, {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels:
+        @Html.Raw(Json.Serialize(Model.CategoryLabels)),
+
+                        datasets: [{
+                            data:
+        @Html.Raw(Json.Serialize(Model.CategoryData)),
+
+                            backgroundColor: [
+                                "#52796f",
+                                "#84a98c",
+                                "#2d6a4f",
+                                "#74c69d",
+                                "#40916c"
+                            ],
+
+                            borderWidth: 0
+                        }]
+
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: "55%"
+                    }
+
+                });
+
+            }
+
+
+            // Reviews
+            const reviewsCanvas =
+                document.getElementById("reviewsChart");
+
+            if (reviewsCanvas) {
+
+                new Chart(reviewsCanvas, {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: [
+                            "1 Star",
+                            "2 Stars",
+                            "3 Stars",
+                            "4 Stars",
+                            "5 Stars"
+                        ],
+
+                        datasets: [{
+                            label: "Reviews",
+
+                            data:
+        @Html.Raw(Json.Serialize(Model.ReviewDistribution)),
+
+                            backgroundColor: "#f4b942",
+
+                            borderRadius: 6
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    </script>
+}

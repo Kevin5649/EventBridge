@@ -1,0 +1,496 @@
+﻿@model IEnumerable<EventBridge.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payments";
+
+    bool isCustomer = User.IsInRole("Customer");
+    bool isPlanner = User.IsInRole("EventPlanner");
+}
+
+<div class="customer-dashboard">
+
+    <!-- USER SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- PAYMENT PAGE CONTENT -->
+    <section class="customer-dashboard-content">
+
+        <div class="payment-page">
+
+            <!-- PAGE INTRO -->
+            <section class="payment-hero">
+
+                <span class="payment-eyebrow">
+                    @(isCustomer ? "YOUR ACTIVITY" : "PAYMENTS")
+                </span>
+
+                <h1>
+                    @(isCustomer ? "My Payments" : "Payments Received")
+                </h1>
+
+                <p>
+                    @if (isCustomer)
+                    {
+                        <span>
+                            View your payment history, transaction details
+                            and payment status for your bookings.
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            Track payments received from customers for
+                            your event bookings.
+                        </span>
+                    }
+                </p>
+
+            </section>
+
+
+            <!-- SUCCESS MESSAGE -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="payment-success-message">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        @TempData["SuccessMessage"]
+                    </span>
+
+                    <button type="button"
+                            class="payment-close-button"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+            }
+
+
+            <!-- PAYMENT SECTION -->
+            <section class="payment-section">
+
+                <div class="payment-section-heading">
+
+                    <div>
+
+                        <span>
+                            PAYMENT HISTORY
+                        </span>
+
+                        <h2>
+                            @(isCustomer
+                                ? "Your payment transactions"
+                                : "Payments Recieved")
+                        </h2>
+
+                    </div>
+
+                    <span class="payment-count">
+                        @Model.Count() payment(s)
+                    </span>
+
+                </div>
+
+
+                @if (Model.Any())
+                {
+
+                    <div class="payment-table-card">
+
+                        <div class="table-responsive">
+
+                            <table class="payment-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Payment</th>
+
+                                        <th>
+                                            @(isCustomer ? "Planner" : "Customer")
+                                        </th>
+
+                                        <th>Booking</th>
+
+                                        <th>Payment Type</th>
+
+                                        <th>Method</th>
+
+                                        <th>Amount</th>
+
+                                        <th>Transaction ID</th>
+
+                                        <th>Payment Date</th>
+
+                                        <th>Status</th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    @foreach (var payment in Model)
+                                    {
+
+                                        <tr>
+
+                                            <!-- PAYMENT ID -->
+                                            <td>
+
+                                                <div class="payment-id">
+
+                                                    <div class="payment-id-icon">
+
+                                                        <i class="fa-solid fa-receipt"></i>
+
+                                                    </div>
+
+                                                    <div>
+
+                                                        <strong>
+                                                            #@payment.Id
+                                                        </strong>
+
+                                                        <small>
+                                                            Payment transaction
+                                                        </small>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- CUSTOMER / PLANNER -->
+                                            <td>
+
+                                                <div class="payment-user">
+
+                                                    <div class="payment-user-icon">
+
+                                                        @if (isCustomer)
+                                                        {
+                                                            <i class="fa-regular fa-building"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="fa-regular fa-user"></i>
+                                                        }
+
+                                                    </div>
+
+                                                    <span>
+
+                                                        @if (isCustomer)
+                                                        {
+                                                            @(payment.Booking?
+                                                                .Quotation?
+                                                                .Enquiry?
+                                                                .EventPlanner?
+                                                                .CompanyName
+                                                                ?? "Planner")
+                                                        }
+                                                        else
+                                                        {
+                                                            @(payment.Booking?
+                                                                .Quotation?
+                                                                .Enquiry?
+                                                                .Customer?
+                                                                .User?
+                                                                .FullName
+                                                                ?? "Customer")
+                                                        }
+
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- BOOKING -->
+                                            <td>
+
+                                                <div class="payment-booking">
+
+                                                    <i class="fa-regular fa-calendar-check"></i>
+
+                                                    <span>
+                                                        Booking #@payment.BookingId
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- PAYMENT TYPE -->
+                                            <td>
+
+                                                @if (payment.PaymentType == "Advance")
+                                                {
+                                                    <span class="payment-type advance">
+
+                                                        <i class="fa-solid fa-wallet"></i>
+
+                                                        Advance
+
+                                                    </span>
+                                                }
+                                                else if (payment.PaymentType == "Remaining")
+                                                {
+                                                    <span class="payment-type remaining">
+
+                                                        <i class="fa-solid fa-circle-check"></i>
+
+                                                        Remaining
+
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="payment-type other">
+
+                                                        @payment.PaymentType
+
+                                                    </span>
+                                                }
+
+                                            </td>
+
+
+                                            <!-- PAYMENT METHOD -->
+                                            <td>
+
+                                                @if (payment.PaymentMethod == "UPI")
+                                                {
+                                                    <span class="payment-method upi">
+
+                                                        <i class="fa-solid fa-mobile-screen-button"></i>
+
+                                                        UPI
+
+                                                    </span>
+                                                }
+                                                else if (payment.PaymentMethod == "Card")
+                                                {
+                                                    <span class="payment-method card">
+
+                                                        <i class="fa-regular fa-credit-card"></i>
+
+                                                        Card
+
+                                                    </span>
+                                                }
+                                                else if (payment.PaymentMethod == "Net Banking")
+                                                {
+                                                    <span class="payment-method netbanking">
+
+                                                        <i class="fa-solid fa-building-columns"></i>
+
+                                                        Net Banking
+
+                                                    </span>
+                                                }
+                                                else if (payment.PaymentMethod == "Wallet")
+                                                {
+                                                    <span class="payment-method wallet">
+
+                                                        <i class="fa-solid fa-wallet"></i>
+
+                                                        Wallet
+
+                                                    </span>
+                                                }
+                                                else if (payment.PaymentMethod == "EMI")
+                                                {
+                                                    <span class="payment-method emi">
+
+                                                        <i class="fa-solid fa-credit-card"></i>
+
+                                                        EMI
+
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="payment-method other">
+
+                                                        <i class="fa-solid fa-money-bill"></i>
+
+                                                        @(string.IsNullOrWhiteSpace(payment.PaymentMethod)
+                                                            ? "Online"
+                                                            : payment.PaymentMethod)
+
+                                                    </span>
+                                                }
+
+                                            </td>
+
+
+                                            <!-- AMOUNT -->
+                                            <td>
+
+                                                <span class="payment-amount">
+                                                    &#8360;@payment.Amount.ToString("N2")
+                                                </span>
+
+                                            </td>
+
+
+                                            <!-- TRANSACTION ID -->
+                                            <td>
+
+                                                <span class="payment-transaction-id">
+                                                    @payment.TransactionId
+                                                </span>
+
+                                            </td>
+
+
+                                            <!-- PAYMENT DATE -->
+                                            <td>
+
+                                                <span class="payment-date">
+
+                                                    <i class="fa-regular fa-calendar"></i>
+
+                                                    @payment.PaymentDate.ToString("MMM dd, yyyy")
+
+                                                </span>
+
+                                            </td>
+
+
+                                            <!-- STATUS -->
+                                            <td>
+                                                @if (payment.Status == "Success")
+                                                {
+                                                    <span class="payment-status success">
+
+                                                        <i class="fa-solid fa-circle-check"></i>
+
+                                                        Successful
+
+                                                    </span>
+                                                }
+                                                else if (payment.Status == "Pending")
+                                                {
+                                                    <span class="payment-status pending">
+
+                                                        <i class="fa-regular fa-clock"></i>
+
+                                                        Pending
+
+                                                    </span>
+                                                }
+                                                else if (payment.Status == "Failed")
+                                                {
+                                                    <span class="payment-status failed">
+
+                                                        <i class="fa-solid fa-circle-xmark"></i>
+
+                                                        Failed
+
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="payment-status other">
+
+                                                        @payment.Status
+
+                                                    </span>
+                                                }
+                                            </td>
+
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                }
+                else
+                {
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="payment-empty-state">
+
+                        <div class="payment-empty-icon">
+
+                            <i class="fa-solid fa-receipt"></i>
+
+                        </div>
+
+                        <h3>
+                            No payments yet
+                        </h3>
+
+                        <p>
+
+                            @if (isCustomer)
+                            {
+                                <span>
+                                    You haven't made any payments yet.
+                                    Your payment history will appear here
+                                    after you make a booking payment.
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    You haven't received any payments yet.
+                                    Customer payments for your bookings
+                                    will appear here.
+                                </span>
+                            }
+
+                        </p>
+
+                    </div>
+
+                }
+
+            </section>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-payment.css"
+          asp-append-version="true" />
+
+}

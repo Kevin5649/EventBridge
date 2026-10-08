@@ -1,0 +1,558 @@
+@model EventBridge.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+    bool isCustomer = User.IsInRole("Customer");
+    bool isPlanner = User.IsInRole("EventPlanner");
+
+    var successfulPayments = Model.Payments?
+        .Where(p => p.Status == "Success")
+        .ToList() ?? new List<EventBridge.Models.Payment>();
+
+    var paidAmount = successfulPayments.Sum(p => p.Amount);
+
+    var remainingAmount = Model.TotalAmount - paidAmount;
+
+    var advancePaid = successfulPayments
+        .Any(p => p.PaymentType == "Advance");
+
+    var remainingPaid = successfulPayments
+        .Any(p => p.PaymentType == "Remaining");
+
+    var fullyPaid = paidAmount >= Model.TotalAmount;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold mb-0">Booking #@Model.Id</h3>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary rounded-pill px-4">
+                    Back to List
+                </a>
+            </div>
+
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show"
+                     role="alert">
+
+                    <i class="bi bi-check-circle me-2"></i>
+                    @TempData["SuccessMessage"]
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+            }
+
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    @TempData["ErrorMessage"]
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+            }
+
+
+            <div class="row mb-4">
+
+                <!-- EVENT INFORMATION -->
+                <div class="col-md-8">
+
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold text-muted mb-4 border-bottom pb-2">
+                                Event Information
+                            </h5>
+
+
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 text-muted fw-bold">
+                                    Event Date:
+                                </div>
+
+                                <div class="col-sm-8">
+                                    @Model.Quotation?.Enquiry?.EventDate.ToString("MMMM dd, yyyy")
+                                </div>
+
+                            </div>
+
+
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 text-muted fw-bold">
+                                    Booked On:
+                                </div>
+
+                                <div class="col-sm-8">
+                                    @Model.BookedAt.ToString("MMM dd, yyyy HH:mm")
+                                </div>
+
+                            </div>
+
+
+                            <div class="row mb-3">
+
+                                <div class="col-sm-4 text-muted fw-bold">
+                                    Status:
+                                </div>
+
+                                <div class="col-sm-8">
+
+                                    @if (Model.Status == "Upcoming")
+                                    {
+                                        <span class="badge bg-primary text-white px-3 py-2 rounded-pill">
+                                            Upcoming
+                                        </span>
+                                    }
+                                    else if (Model.Status == "Confirmed")
+                                    {
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill">
+                                            Confirmed
+                                        </span>
+                                    }
+                                    else if (Model.Status == "Completed")
+                                    {
+                                        <span class="badge bg-success px-3 py-2 rounded-pill">
+                                            Completed
+                                        </span>
+                                    }
+                                    else if (Model.Status == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill">
+                                            Cancelled
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            @if (isPlanner &&
+                            (Model.Status == "Upcoming" ||
+                            Model.Status == "Confirmed"))
+                            {
+                                <div class="mt-4 pt-3 border-top">
+
+                                    <h6 class="fw-bold text-muted mb-2">
+                                        Update Status
+                                    </h6>
+
+                                    <div class="d-flex gap-2">
+
+                                        @if (Model.Status == "Upcoming")
+                                        {
+                                            <form asp-action="UpdateStatus"
+                                                  method="post"
+                                                  onsubmit="return confirm('Mark as confirmed?');">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@Model.Id" />
+
+                                                <input type="hidden"
+                                                       name="status"
+                                                       value="Confirmed" />
+
+                                                <button type="submit"
+                                                        class="btn btn-info text-white rounded-pill shadow-sm">
+
+                                                    Confirm Booking
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+
+                                        <form asp-action="UpdateStatus"
+                                              method="post"
+                                              onsubmit="return confirm('Mark as completed?');">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@Model.Id" />
+
+                                            <input type="hidden"
+                                                   name="status"
+                                                   value="Completed" />
+
+                                            <button type="submit"
+                                                    class="btn btn-success rounded-pill shadow-sm">
+
+                                                Mark Completed
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <form asp-action="UpdateStatus"
+                                              method="post"
+                                              onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@Model.Id" />
+
+                                            <input type="hidden"
+                                                   name="status"
+                                                   value="Cancelled" />
+
+                                            <button type="submit"
+                                                    class="btn btn-danger rounded-pill shadow-sm">
+
+                                                Cancel
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAYMENT SUMMARY -->
+                <div class="col-md-4">
+
+                    <div class="card shadow-sm border-0 rounded-4 h-100 bg-light">
+
+                        <div class="card-body p-4 text-center">
+
+                            <h5 class="fw-bold text-muted mb-4 border-bottom pb-2">
+                                Payment Summary
+                            </h5>
+
+
+                            <!-- TOTAL -->
+                            <div class="mb-3">
+
+                                <div class="text-muted small fw-bold">
+                                    Total Amount
+                                </div>
+
+                                <div class="fs-3 fw-bold text-dark">
+                                    ₹@Model.TotalAmount.ToString("N2")
+                                </div>
+
+                            </div>
+
+
+                            <!-- ADVANCE -->
+                            <div class="mb-3">
+
+                                <div class="text-muted small fw-bold">
+                                    Advance Required
+                                </div>
+
+                                <div class="fs-5 text-primary">
+                                    ₹@Model.AdvanceAmount.ToString("N2")
+                                </div>
+
+                            </div>
+
+
+                            <!-- PAID -->
+                            <div class="mb-3">
+
+                                <div class="text-muted small fw-bold">
+                                    Amount Paid
+                                </div>
+
+                                <div class="fs-5 text-success">
+                                    ₹@paidAmount.ToString("N2")
+                                </div>
+
+                            </div>
+
+
+                            <!-- REMAINING -->
+                            @if (remainingAmount > 0)
+                            {
+                                <div class="mb-3">
+
+                                    <div class="text-muted small fw-bold">
+                                        Remaining Amount
+                                    </div>
+
+                                    <div class="fs-5 text-danger">
+                                        ₹@remainingAmount.ToString("N2")
+                                    </div>
+
+                                </div>
+                            }
+
+
+                            <hr />
+
+
+                            <hr />
+
+                            @if (fullyPaid)
+                            {
+                                <div class="text-success fw-bold mb-2">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Payment Completed
+                                </div>
+
+                                <div class="small text-muted">
+                                    Total Paid:
+                                    ₹@paidAmount.ToString("N2")
+                                </div>
+                            }
+                            else if (isCustomer && !advancePaid)
+                            {
+                                <div class="text-warning fw-bold mb-2">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Advance Payment Pending
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <a asp-controller="Payment"
+                                       asp-action="Initiate"
+                                       asp-route-bookingId="@Model.Id"
+                                       asp-route-isAdvance="true"
+                                       class="btn btn-primary rounded-pill shadow-sm">
+                                        Pay Advance
+                                    </a>
+                                </div>
+                            }
+                            else if (isCustomer && advancePaid && !remainingPaid)
+                            {
+                                <div class="text-success fw-bold mb-2">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Advance Paid
+                                </div>
+
+                                <div class="small text-muted mb-3">
+                                    ₹@paidAmount.ToString("N2") paid successfully
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <a asp-controller="Payment"
+                                       asp-action="Initiate"
+                                       asp-route-bookingId="@Model.Id"
+                                       asp-route-isAdvance="false"
+                                       class="btn btn-primary rounded-pill shadow-sm">
+                                        Pay Remaining Amount
+                                    </a>
+                                </div>
+                            }
+                            else if (!fullyPaid)
+                            {
+                                <div class="text-warning fw-bold">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Payment Pending
+                                </div>
+
+                                <div class="small text-muted mt-1">
+                                    Paid: ₹@paidAmount.ToString("N2")
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER / PLANNER DETAILS -->
+
+            <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold text-muted border-bottom pb-2 mb-3">
+
+                        @(isPlanner
+                            ? "Customer Details"
+                            : "Planner Details")
+
+                    </h5>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            @if (isPlanner)
+                            {
+                                <p class="mb-1">
+
+                                    <strong>Name:</strong>
+                                    @Model.Quotation?.Enquiry?.Customer?.User?.FullName
+
+                                </p>
+
+                                <p class="mb-1">
+
+                                    <strong>Email:</strong>
+                                    @Model.Quotation?.Enquiry?.Customer?.User?.Email
+
+                                </p>
+
+                                <p class="mb-0">
+
+                                    <strong>Phone:</strong>
+                                    @Model.Quotation?.Enquiry?.Customer?.User?.PhoneNumber
+
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="mb-1">
+
+                                    <strong>Company:</strong>
+                                    @Model.Quotation?.Enquiry?.EventPlanner?.CompanyName
+
+                                </p>
+
+                                <p class="mb-1">
+
+                                    <strong>Email:</strong>
+                                    @Model.Quotation?.Enquiry?.EventPlanner?.User?.Email
+
+                                </p>
+
+                                <p class="mb-0">
+
+                                    <strong>Phone:</strong>
+                                    @Model.Quotation?.Enquiry?.EventPlanner?.User?.PhoneNumber
+
+                                </p>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- WRITE REVIEW -->
+            @if (isCustomer &&
+            Model.Status == "Completed" &&
+            Model.Review == null)
+            {
+                <div class="card bg-success text-white shadow border-0 rounded-4 mt-5">
+
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <h4 class="mb-1">
+                                Rate Your Experience!
+                            </h4>
+
+                            <p class="mb-0 text-white-50">
+                                Share your thoughts and help others find great planners.
+                            </p>
+
+                        </div>
+
+
+                        <a asp-controller="Review"
+                           asp-action="Create"
+                           asp-route-bookingId="@Model.Id"
+                           class="btn btn-light text-success btn-lg rounded-pill fw-bold px-4">
+
+                            Write a Review
+
+                        </a>
+
+                    </div>
+
+                </div>
+            }
+
+            else if (Model.Review != null)
+            {
+                <div class="card shadow-sm border-0 rounded-4 mt-5">
+
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold text-muted border-bottom pb-2 mb-3">
+                            Review
+                        </h5>
+
+
+                        <div class="d-flex gap-3">
+
+                            <div>
+
+                                <div class="text-warning mb-2 fs-5">
+
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < Model.Review.Rating)
+                                        {
+                                            <i class="fa-solid fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-regular fa-star"></i>
+                                        }
+                                    }
+
+                                </div>
+
+
+                                <p class="mb-1">
+                                    @Model.Review.Comment
+                                </p>
+
+
+                                <small class="text-muted">
+
+                                    Reviewed on
+                                    @Model.Review.CreatedAt.ToString("MMM dd, yyyy")
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

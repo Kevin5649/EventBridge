@@ -1,0 +1,241 @@
+﻿@model IEnumerable<EventBridge.Models.Customer>
+
+@{
+    ViewData["Title"] = "Manage Customers";
+}
+
+<link rel="stylesheet"
+      href="~/css/admin-dashboard.css"
+      asp-append-version="true" />
+<link rel="stylesheet"
+      href="~/css/customer-sidebar.css"
+      asp-append-version="true" />
+
+
+<div class="dashboard-page admin-dashboard-page">
+
+    <partial name="_UserSidebar" />
+
+    <main class="admin-dashboard-content">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header">
+
+            <div>
+                <h2>Manage Customers</h2>
+                <p>View and manage customer accounts on EventBridge.</p>
+            </div>
+
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="admin-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="admin-alert success">
+                <i class="bi bi-check-circle"></i>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="admin-alert error">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>@TempData["ErrorMessage"]</span>
+            </div>
+        }
+
+
+        <!-- Customer Management -->
+        <div class="admin-table-card">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>Customer Accounts</h3>
+                    <p>Activate or deactivate customer accounts.</p>
+                </div>
+
+                <span class="admin-record-count">
+                    @Model.Count() Customers
+                </span>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var customer in Model)
+                        {
+                            var user = customer.User;
+
+                            <tr>
+
+                                <!-- Customer -->
+                                <td>
+                                    <div class="admin-user-cell">
+
+                                        <div class="admin-user-avatar">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+
+                                        <div>
+                                            <strong>
+                                                @(user?.FullName ?? "Unknown Customer")
+                                            </strong>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+
+                                <!-- Email -->
+                                <td>
+                                    @(user?.Email ?? "No email")
+                                </td>
+
+
+                                <!-- Status -->
+                                <td>
+
+                                    @if (user?.IsActive == true)
+                                    {
+                                        <span class="admin-status active">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-status inactive">
+                                            Inactive
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Joined -->
+                                <td>
+                                    @(user?.CreatedAt.ToString("MMM dd, yyyy") ?? "-")
+                                </td>
+
+
+                                <!-- Action -->
+                                <td class="text-end">
+
+                                    @if (user?.IsActive == true)
+                                    {
+                                        <form asp-controller="Admin"
+                                              asp-action="ToggleUserStatus"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@user.Id" />
+
+                                            <input type="hidden"
+                                                   name="returnPage"
+                                                   value="Customers" />
+
+                                            <input type="hidden"
+                                                   name="activate"
+                                                   value="false" />
+
+                                            <button type="submit"
+                                                    class="admin-action deactivate"
+                                                    onclick="return confirm('Deactivate this customer account?');">
+
+                                                <i class="bi bi-person-x"></i>
+                                                Deactivate
+
+                                            </button>
+
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="Admin"
+                                              asp-action="ToggleUserStatus"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@user?.Id" />
+
+                                            <input type="hidden"
+                                                   name="returnPage"
+                                                   value="Customers" />
+
+                                            <input type="hidden"
+                                                   name="activate"
+                                                   value="true" />
+
+                                            <button type="submit"
+                                                    class="admin-action activate">
+
+                                                <i class="bi bi-person-check"></i>
+                                                Activate
+
+                                            </button>
+
+                                        </form>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+
+                        @if (!Model.Any())
+                        {
+                            <tr>
+
+                                <td colspan="5"
+                                    class="admin-empty">
+
+                                    <i class="bi bi-people display-6 d-block mb-2"></i>
+
+                                    No customers found.
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>

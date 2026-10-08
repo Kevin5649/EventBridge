@@ -1,0 +1,375 @@
+@model EventBridge.Models.EventPlanner
+
+@{
+    ViewData["Title"] = Model.CompanyName;
+
+    var portfolio = ViewBag.Portfolio as IEnumerable<EventBridge.Models.PlannerPortfolio>;
+    var reviews = ViewBag.Reviews as IEnumerable<EventBridge.Models.Review>;
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/search-profile.css"
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+}
+
+<div class="customer-dashboard">
+
+    <!-- CUSTOMER SIDEBAR -->
+    <partial name="_UserSidebar" />
+
+    <!-- PAGE CONTENT -->
+    <div class="customer-dashboard-content planner-profile-content">
+
+        <!-- =========================================
+             PROFILE HEADER
+             ========================================= -->
+
+        <div class="planner-profile-header">
+
+            <div>
+                <span class="planner-profile-eyebrow">
+                    EVENT PLANNER
+                </span>
+
+                <h1>@Model.CompanyName</h1>
+
+                <p>
+                    View planner details, portfolio and customer reviews.
+                </p>
+            </div>
+
+            <a asp-controller="Search"
+               asp-action="Index"
+               class="planner-back-btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Planners
+
+            </a>
+
+        </div>
+
+
+        <!-- =========================================
+             PROFILE GRID
+             ========================================= -->
+
+        <div class="planner-profile-grid">
+
+            <!-- =====================================
+                 LEFT PROFILE CARD
+                 ===================================== -->
+
+            <aside class="planner-profile-card">
+
+                <div class="planner-profile-image">
+
+                    @if (!string.IsNullOrEmpty(Model.User?.ProfilePicturePath))
+                    {
+                        <img src="@Model.User.ProfilePicturePath"
+                             alt="@Model.CompanyName" />
+                    }
+                    else
+                    {
+                        <div class="planner-profile-placeholder">
+                            <i class="fa-regular fa-user"></i>
+                        </div>
+                    }
+
+                </div>
+
+
+                <h2>@Model.CompanyName</h2>
+
+
+                @if (Model.IsVerified)
+                {
+                    <span class="planner-verified-badge">
+
+                        <i class="fa-solid fa-circle-check"></i>
+                        Verified Planner
+
+                    </span>
+                }
+
+
+                <!-- STATS -->
+
+                <div class="planner-profile-stats">
+
+                    <div class="planner-stat">
+
+                        <strong>
+                            <i class="fa-solid fa-star"></i>
+                            @Model.AvgRating.ToString("0.0")
+                        </strong>
+
+                        <span>
+                            @Model.ReviewCount Reviews
+                        </span>
+
+                    </div>
+
+
+                    <div class="planner-stat">
+
+                        <strong>
+                            <i class="fa-solid fa-briefcase"></i>
+                            @Model.Experience
+                        </strong>
+
+                        <span>
+                            Years Experience
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTION -->
+                @if (User.IsInRole("Customer"))
+                {
+                    <a asp-controller="Enquiry"
+                       asp-action="Create"
+                       asp-route-plannerId="@Model.PlannerId"
+                       class="planner-request-btn">
+
+                        <i class="fa-regular fa-paper-plane"></i>
+                        Request Quote
+
+                    </a>
+                }
+                else if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="planner-request-btn planner-login-btn">
+
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Login to Book
+
+                    </a>
+                }
+
+            </aside>
+
+
+            <!-- =====================================
+                 RIGHT CONTENT
+                 ===================================== -->
+
+            <div class="planner-profile-main">
+
+                <!-- =================================
+                     ABOUT
+                     ================================= -->
+
+                <section class="planner-section-card">
+
+                    <div class="planner-section-heading">
+
+                        <div class="planner-section-icon">
+                            <i class="fa-regular fa-building"></i>
+                        </div>
+
+                        <div>
+                            <span>ABOUT</span>
+                            <h2>About Us</h2>
+                        </div>
+
+                    </div>
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <p class="planner-description">
+                            @Model.Description
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="planner-empty-text">
+                            No description has been provided by this planner.
+                        </p>
+                    }
+
+                </section>
+
+
+                <!-- =================================
+                     PORTFOLIO
+                     ================================= -->
+
+                <section class="planner-section-card">
+
+                    <div class="planner-section-heading">
+
+                        <div class="planner-section-icon">
+                            <i class="fa-regular fa-images"></i>
+                        </div>
+
+                        <div>
+                            <span>WORK</span>
+                            <h2>Portfolio</h2>
+                        </div>
+
+                    </div>
+
+
+                    @if (portfolio != null && portfolio.Any())
+                    {
+                        <div class="planner-portfolio-grid">
+
+                            @foreach (var img in portfolio)
+                            {
+                                <div class="planner-portfolio-item">
+
+                                    <img src="@img.ImagePath"
+                                         alt="@img.Caption"
+                                         title="@img.Caption" />
+
+                                    @if (!string.IsNullOrWhiteSpace(img.Caption))
+                                    {
+                                        <div class="planner-portfolio-caption">
+                                            @img.Caption
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="planner-empty-state">
+
+                            <div class="planner-empty-icon">
+                                <i class="fa-regular fa-images"></i>
+                            </div>
+
+                            <h3>No Portfolio Yet</h3>
+
+                            <p>
+                                This planner hasn't added any portfolio items yet.
+                            </p>
+
+                        </div>
+                    }
+
+                </section>
+
+
+                <!-- =================================
+                     REVIEWS
+                     ================================= -->
+
+                <section class="planner-section-card">
+
+                    <div class="planner-section-heading">
+
+                        <div class="planner-section-icon">
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+
+                        <div>
+                            <span>FEEDBACK</span>
+                            <h2>Customer Reviews</h2>
+                        </div>
+
+                    </div>
+
+
+                    @if (reviews != null && reviews.Any())
+                    {
+                        <div class="planner-reviews">
+
+                            @foreach (var review in reviews)
+                            {
+                                <div class="planner-review">
+
+                                    <div class="planner-review-avatar">
+                                        <i class="fa-regular fa-user"></i>
+                                    </div>
+
+
+                                    <div class="planner-review-content">
+
+                                        <div class="planner-review-top">
+
+                                            <div>
+                                                <strong>
+                                                    @review.Customer?.User?.FullName
+                                                </strong>
+
+                                                <span>
+                                                    @review.CreatedAt.ToString("MMM dd, yyyy")
+                                                </span>
+                                            </div>
+
+                                            <!-- RATING STARS -->
+
+                                            <div class="planner-review-stars">
+
+                                                @for (int i = 0; i < 5; i++)
+                                                {
+                                                    if (i < review.Rating)
+                                                    {
+                                                        <i class="fa-solid fa-star"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa-regular fa-star"></i>
+                                                    }
+                                                }
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <p>
+                                            @review.Comment
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="planner-empty-state">
+
+                            <div class="planner-empty-icon">
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+
+                            <h3>No Reviews Yet</h3>
+
+                            <p>
+                                This planner hasn't received any customer reviews yet.
+                            </p>
+
+                        </div>
+                    }
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

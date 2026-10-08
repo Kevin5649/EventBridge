@@ -1,0 +1,187 @@
+/* =========================================
+   USER SIDEBAR
+========================================= */
+
+.customer-sidebar {
+    width: 76px;
+    background: #ffffff;
+    border-right: 1px solid #e8ecea;
+    padding: 24px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    transition: width 0.25s ease;
+    overflow: hidden;
+}
+
+    /* OPEN SIDEBAR */
+    .customer-sidebar.open {
+        width: 245px;
+    }
+
+    /* CLOSED SIDEBAR */
+    .customer-sidebar.collapsed {
+        width: 76px;
+        overflow: hidden;
+    }
+
+    /* Hide text when closed */
+    .customer-sidebar:not(.open) .customer-sidebar-name,
+    .customer-sidebar:not(.open) .customer-side-link span,
+    .customer-sidebar:not(.open) .customer-sidebar-bottom {
+        display: none;
+    }
+
+/* Sidebar title */
+
+.customer-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 10px 25px;
+}
+
+.customer-sidebar-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: #eef3f1;
+    color: #52796f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.customer-sidebar-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #303633;
+    white-space: nowrap;
+}
+
+
+/* Sidebar navigation */
+
+.customer-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.customer-side-link {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 13px;
+    border-radius: 11px;
+    color: #66706d;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+    .customer-side-link i {
+        width: 22px;
+        text-align: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .customer-side-link:hover {
+        background: #f1f5f3;
+        color: #52796f;
+    }
+
+    .customer-side-link.active {
+        background: #eaf1ee;
+        color: #52796f;
+        font-weight: 600;
+    }
+
+
+/* Sidebar bottom */
+
+.customer-sidebar-bottom {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 10px 5px 0;
+    padding: 14px;
+    background: #f5f7f6;
+    border-radius: 13px;
+}
+
+.customer-help-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #52796f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.customer-help-text {
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+}
+
+    .customer-help-text strong {
+        font-size: 13px;
+        color: #343a40;
+    }
+
+    .customer-help-text span {
+        font-size: 11px;
+        color: #868e96;
+    }
+
+
+
+
+/* =========================================
+   MOBILE SIDEBAR BEHAVIOR
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    /* CLOSED - completely hide sidebar */
+    .customer-sidebar {
+        width: 0;
+        padding: 0;
+        border-right: none;
+        overflow: hidden;
+    }
+
+        /* OPEN - show full sidebar */
+        .customer-sidebar.open {
+            width: 245px;
+            padding: 24px 14px;
+            border-right: 1px solid #e8ecea;
+        }
+
+            /* Show text when sidebar is OPEN */
+            .customer-sidebar.open .customer-sidebar-name,
+            .customer-sidebar.open .customer-side-link span,
+            .customer-sidebar.open .customer-sidebar-bottom {
+                display: flex;
+            }
+
+            /* Sidebar name needs normal inline display */
+            .customer-sidebar.open .customer-sidebar-name {
+                display: inline;
+            }
+
+            /* Help text container */
+            .customer-sidebar.open .customer-sidebar-bottom {
+                display: flex;
+            }
+}

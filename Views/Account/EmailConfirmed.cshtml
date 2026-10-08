@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Email Verified";
+    Layout = "_LandingLayout";
+}
+
+<div class="forgot-password-page">
+
+    <div class="forgot-password-card">
+
+        <div class="forgot-password-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+
+        <div class="forgot-password-heading">
+
+            <h1>Email Verified!</h1>
+
+            <p>
+                Your email address has been successfully verified.
+            </p>
+
+        </div>
+
+
+        <div class="text-center">
+
+            <p class="text-muted mb-4">
+                Your EventBridge account is now active.
+                You can log in and start using EventBridge.
+            </p>
+
+            <a asp-action="Login"
+               asp-controller="Account"
+               class="btn forgot-submit-btn w-100">
+
+                <i class="fa-solid fa-right-to-bracket me-2"></i>
+                Continue to Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

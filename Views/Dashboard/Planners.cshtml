@@ -1,0 +1,313 @@
+﻿@model IEnumerable<EventBridge.Models.EventPlanner>
+
+@{
+    ViewData["Title"] = "Manage Planners";
+}
+
+<link rel="stylesheet" href="~/css/customer-sidebar.css" />
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+
+<div class="dashboard-page admin-dashboard-page">
+
+    <partial name="_UserSidebar" />
+
+    <main class="admin-dashboard-content">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header">
+            <div>
+                <h2>Manage Planners</h2>
+                <p>Review, verify and manage EventBridge planner accounts.</p>
+            </div>
+
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="admin-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+
+        <!-- Summary -->
+        <div class="admin-planner-summary">
+
+            <div class="admin-summary-box">
+                <div class="admin-summary-icon green-icon">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+
+                <div>
+                    <span>Total Planners</span>
+                    <strong>@Model.Count()</strong>
+                </div>
+            </div>
+
+            <div class="admin-summary-box">
+                <div class="admin-summary-icon orange-icon">
+                    <i class="bi bi-shield-exclamation"></i>
+                </div>
+
+                <div>
+                    <span>Pending Verification</span>
+                    <strong>@Model.Count(p => !p.IsVerified)</strong>
+                </div>
+            </div>
+
+            <div class="admin-summary-box">
+                <div class="admin-summary-icon blue-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+                    <span>Verified Planners</span>
+                    <strong>@Model.Count(p => p.IsVerified)</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Planner Table -->
+        <div class="admin-table-card">
+
+            <div class="admin-table-header">
+                <div>
+                    <h3>All Event Planners</h3>
+                    <p>Manage planner verification and account status.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Planner</th>
+                            <th>Email</th>
+                            <th>Experience</th>
+                            <th>Avg. Rating</th>
+                            <th>Verification</th>
+                            <th>Account</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var planner in Model)
+                        {
+                            <tr>
+
+                                <!-- Planner -->
+                                <td>
+                                    <strong>
+                                        @planner.CompanyName
+                                    </strong>
+
+                                    <div class="admin-small-text">
+                                        @planner.User?.FullName
+                                    </div>
+                                </td>
+
+
+                                <!-- Email -->
+                                <td>
+                                    @planner.User?.Email
+                                </td>
+
+
+                                <!-- Experience -->
+                                <td>
+                                    @planner.Experience years
+                                </td>
+
+                                <td>
+                                    <span>
+                                        <i class="bi bi-star-fill"></i>
+                                        @planner.AvgRating.ToString("0.0")
+                                    </span>
+
+                                    <div class="admin-small-text">
+                                        @planner.ReviewCount reviews
+                                    </div>
+                                </td>
+
+                                <!-- Verification -->
+                                <td>
+
+                                    @if (planner.IsVerified)
+                                    {
+                                        <span class="admin-status verified">
+                                            <i class="bi bi-check-circle"></i>
+                                            Verified
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-status pending">
+                                            <i class="bi bi-clock"></i>
+                                            Pending
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Account Status -->
+                                <td>
+
+                                    @if (planner.User?.IsActive == true)
+                                    {
+                                        <span class="admin-status active">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-status inactive">
+                                            Inactive
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td>
+
+                                    <div class="admin-planner-actions">
+
+                                        @if (!planner.IsVerified)
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="VerifyPlanner"
+                                                  method="post">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@planner.PlannerId" />
+                                                <input type="hidden"
+                                                       name="returnPage"
+                                                       value="Planners" />
+
+                                                <button type="submit"
+                                                        class="admin-action verify">
+                                                    <i class="bi bi-check-lg"></i>
+                                                    Verify
+                                                </button>
+
+                                            </form>
+
+                                        }
+
+                                        @if (planner.IsVerified)
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="UnverifyPlanner"
+                                                  method="post">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@planner.PlannerId" />
+
+                                                <button type="submit"
+                                                        class="admin-action reject"
+                                                        onclick="return confirm('Unverify this planner?');">
+
+                                                    <i class="bi bi-shield-x"></i>
+                                                    Unverify
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                        @if (planner.User?.IsActive == true)
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="ToggleUserStatus"
+                                                  method="post">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@planner.User.Id" />
+
+                                                <input type="hidden"
+                                                       name="returnPage"
+                                                       value="Planners" />
+
+                                                <input type="hidden"
+                                                       name="activate"
+                                                       value="false" />
+
+                                                <button type="submit"
+                                                        class="admin-action deactivate"
+                                                        onclick="return confirm('Deactivate this planner account?');">
+
+                                                    <i class="bi bi-person-x"></i>
+                                                    Deactivate
+
+                                                </button>
+
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-controller="Admin"
+                                                  asp-action="ToggleUserStatus"
+                                                  method="post">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@planner.User?.Id" />
+
+                                                <input type="hidden"
+                                                       name="returnPage"
+                                                       value="Planners" />
+
+                                                <input type="hidden"
+                                                       name="activate"
+                                                       value="true" />
+
+                                                <button type="submit"
+                                                        class="admin-action activate">
+
+                                                    <i class="bi bi-person-check"></i>
+                                                    Activate
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="admin-empty">
+                                    <i class="bi bi-briefcase"></i>
+                                    <span>No event planners found.</span>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>

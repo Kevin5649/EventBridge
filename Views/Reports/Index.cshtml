@@ -1,0 +1,96 @@
+@{
+    ViewData["Title"] = "Reports Dashboard";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="fw-bold text-primary mb-0"><i class="bi bi-file-earmark-bar-graph me-2"></i> System Reports</h2>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Back to Dashboard</a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Customer Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-people display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Customer Report</h5>
+                    <p class="text-muted small mb-4">View all registered customers, filter by name, and sort by registration date.</p>
+                    <a asp-action="Customers" class="btn btn-primary rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planner Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-briefcase display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Planner Report</h5>
+                    <p class="text-muted small mb-4">Analyze event planner data, verification statuses, and experience levels.</p>
+                    <a asp-action="Planners" class="btn btn-success rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-info bg-opacity-10 text-info d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-calendar-check display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Booking Report</h5>
+                    <p class="text-muted small mb-4">Track booking lifecycle, filter by statuses, and monitor upcoming events.</p>
+                    <a asp-action="Bookings" class="btn btn-info text-white rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-warning bg-opacity-10 text-warning d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-currency-rupee display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Payment Report</h5>
+                    <p class="text-muted small mb-4">Review transaction history, successful payments, and revenue generated.</p>
+                    <a asp-action="Payments" class="btn btn-warning rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-danger bg-opacity-10 text-danger d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-star display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Review Report</h5>
+                    <p class="text-muted small mb-4">Analyze customer feedback, filter by star ratings, and monitor quality.</p>
+                    <a asp-action="Reviews" class="btn btn-danger rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Report -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-tags display-5"></i>
+                    </div>
+                    <h5 class="fw-bold">Category Report</h5>
+                    <p class="text-muted small mb-4">View event categories and the number of planners registered under each.</p>
+                    <a asp-action="Categories" class="btn btn-secondary rounded-pill px-4 shadow-sm w-100">Generate Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

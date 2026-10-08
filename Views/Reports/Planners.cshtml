@@ -1,0 +1,124 @@
+@model IEnumerable<EventBridge.Models.EventPlanner>
+
+@{
+    ViewData["Title"] = "Planner Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-primary">Event Planner Report</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Back to Reports</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4 bg-light rounded-4">
+            <form asp-action="Planners" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control border-start-0 ps-0" placeholder="Search company or email..." />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="statusFilter" class="form-select">
+                        <option value="">All Verification Statuses</option>
+                        <option value="verified" selected="@(ViewBag.StatusFilter == "verified")">Verified Only</option>
+                        <option value="unverified" selected="@(ViewBag.StatusFilter == "unverified")">Unverified Only</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="sortOrder" class="form-select">
+                        <option value="">Sort By: Name (A-Z)</option>
+                        <option value="name_desc" selected="@(ViewBag.NameSortParm == "name_desc")">Sort By: Name (Z-A)</option>
+                        <option value="Exp" selected="@(ViewBag.ExpSortParm == "Exp")">Sort By: Experience (Low to High)</option>
+                        <option value="exp_desc" selected="@(ViewBag.ExpSortParm == "exp_desc")">Sort By: Experience (High to Low)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary shadow-sm w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted">
+                        <tr>
+                            <th class="ps-4">Company Name</th>
+                            <th>Experience</th>
+                            <th>Rating</th>
+                            <th>Verification</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold">
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(item.User?.ProfilePicturePath))
+                                        {
+                                            <img src="@item.User.ProfilePicturePath" class="rounded-circle me-3 border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary d-flex align-items-center justify-content-center me-3 border" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-briefcase"></i>
+                                            </div>
+                                        }
+                                        <div>
+                                            @item.CompanyName
+                                            <div class="small text-muted fw-normal">@item.User?.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.Experience yrs</td>
+                                <td>
+                                    <span class="text-warning fw-bold"><i class="bi bi-star-fill"></i> @item.AvgRating.ToString("0.0")</span>
+                                    <span class="small text-muted">(@item.ReviewCount)</span>
+                                </td>
+                                <td>
+                                    @if (item.IsVerified)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-shield-check"></i> Verified</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.User != null && item.User.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-controller="Search" asp-action="Profile" asp-route-id="@item.PlannerId" class="btn btn-sm btn-outline-primary rounded-pill">View Profile</a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">No planners found matching the criteria.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 p-3 text-muted small text-end">
+            Total Records: @Model.Count()
+        </div>
+    </div>
+</div>

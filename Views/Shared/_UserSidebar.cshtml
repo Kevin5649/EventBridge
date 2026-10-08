@@ -1,0 +1,167 @@
+﻿@*
+    Role-based sidebar for Customer, EventPlanner and Admin.
+*@
+
+<aside class="customer-sidebar" id="customerSidebar">
+
+    <div class="customer-sidebar-top">
+
+        
+
+
+        <nav class="customer-sidebar-nav">
+
+            <!-- Dashboard - Customer, Planner and Admin -->
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="customer-side-link">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            @if (User.IsInRole("Customer"))
+            {
+                <!-- Customer: Find Planners -->
+                <a asp-controller="Search"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <span>Find Planners</span>
+
+                </a>
+            }
+
+
+            @if (User.IsInRole("Admin"))
+            {
+                <!-- Admin: Manage Customers -->
+                <a asp-controller="Admin"
+                   asp-action="Customers"
+                   class="customer-side-link">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    <span>Manage Customers</span>
+
+                </a>
+
+
+                <!-- Admin: Manage Planners -->
+                <a asp-controller="Admin"
+                   asp-action="Planners"
+                   class="customer-side-link">
+
+                    <i class="fa-solid fa-briefcase"></i>
+
+                    <span>Manage Planners</span>
+
+                </a>
+            }
+
+
+            <!-- Customer and Planner -->
+            @if (User.IsInRole("Customer") || User.IsInRole("EventPlanner"))
+            {
+                <a asp-controller="Enquiry"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-regular fa-paper-plane"></i>
+
+                    <span>My Enquiries</span>
+
+                </a>
+
+
+                <a asp-controller="Booking"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-regular fa-calendar-check"></i>
+
+                    <span>My Bookings</span>
+
+                </a>
+
+
+                <a asp-controller="Payment"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                    <span>Payments</span>
+
+                </a>
+            }
+
+
+            @if (User.IsInRole("EventPlanner"))
+            {
+                <!-- Planner: Portfolio -->
+                <a asp-controller="Portfolio"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-regular fa-images"></i>
+
+                    <span>My Portfolio</span>
+
+                </a>
+            }
+
+
+            @if (User.IsInRole("Admin"))
+            {
+                <!-- Admin: Reports -->
+                <a asp-controller="Reports"
+                   asp-action="Index"
+                   class="customer-side-link">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    <span>Reports</span>
+
+                </a>
+            }
+
+
+            <!-- Profile - Customer, Planner and Admin -->
+            <a asp-controller="Profile"
+               asp-action="Index"
+               class="customer-side-link">
+
+                <i class="fa-regular fa-user"></i>
+
+                <span>My Profile</span>
+
+            </a>
+
+        </nav>
+
+    </div>
+
+
+    <div class="customer-sidebar-bottom">
+
+        <div class="customer-help-icon">
+            <i class="fa-regular fa-circle-question"></i>
+        </div>
+
+        <div class="customer-help-text">
+
+            <strong>Need help?</strong>
+
+            <span>We're here for you.</span>
+
+        </div>
+
+    </div>
+
+</aside>

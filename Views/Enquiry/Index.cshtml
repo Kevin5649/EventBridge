@@ -1,0 +1,326 @@
+@model IEnumerable<EventBridge.Models.Enquiry>
+
+@{
+    ViewData["Title"] = "My Enquiries";
+}
+
+<div class="customer-dashboard">
+
+    <!-- CUSTOMER SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- ENQUIRY PAGE CONTENT -->
+    <section class="customer-dashboard-content">
+
+        <div class="enquiry-page">
+
+            <!-- PAGE INTRO -->
+            <section class="enquiry-hero">
+
+                <span class="enquiry-eyebrow">
+                    YOUR ACTIVITY
+                </span>
+
+                <h1>
+                    My Enquiries
+                </h1>
+
+                <p>
+                    Track your event enquiries, view planner responses
+                    and manage your conversations in one place.
+                </p>
+
+            </section>
+
+
+            <!-- SUCCESS MESSAGE -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="enquiry-success-message">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        @TempData["SuccessMessage"]
+                    </span>
+
+                    <button type="button"
+                            class="enquiry-close-button"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                </div>
+            }
+
+
+            <!-- ENQUIRIES -->
+            <section class="enquiry-section">
+
+                <div class="enquiry-section-heading">
+
+                    <div>
+                        <span>ENQUIRIES</span>
+
+                        <h2>
+                            Your event enquiries
+                        </h2>
+                    </div>
+
+                    <span class="enquiry-count">
+                        @Model.Count() enquiry(s)
+                    </span>
+
+                </div>
+
+
+                @if (Model.Any())
+                {
+
+                    <div class="enquiry-table-card">
+
+                        <div class="table-responsive">
+
+                            <table class="enquiry-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Enquiry</th>
+                                        <th>
+                                            @(User.IsInRole("Customer")
+                                                ? "Planner"
+                                                : "Customer")
+                                        </th>
+                                        <th>Event Type</th>
+                                        <th>Event Date</th>
+                                        <th>Budget</th>
+                                        <th>Guests</th>
+                                        <th>Status</th>
+                                        <th>Sent On</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+
+                                        <tr>
+
+                                            <!-- ENQUIRY ID -->
+                                            <td>
+
+                                                <div class="enquiry-id">
+
+                                                    <div class="enquiry-id-icon">
+                                                        <i class="fa-regular fa-paper-plane"></i>
+                                                    </div>
+
+                                                    <div>
+                                                        <strong>
+                                                            #@item.Id
+                                                        </strong>
+
+                                                        <small>
+                                                            Event enquiry
+                                                        </small>
+                                                    </div>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- PLANNER -->
+                                            <td>
+
+                                                <div class="enquiry-planner">
+
+                                                    <div class="enquiry-planner-icon">
+                                                        <i class="fa-regular fa-building"></i>
+                                                    </div>
+
+                                                    <span>
+                                                        @(User.IsInRole("Customer")
+                                                            ? item.EventPlanner?.CompanyName
+                                                            : item.Customer?.User?.FullName)
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+                                            <!-- EVENT TYPE -->
+                                            <td>
+                                                <span class="enquiry-created-date">
+                                                    @(item.Category?.Name ?? "Not specified")
+                                                </span>
+                                            </td>
+
+                                            <!-- EVENT DATE -->
+                                            <td>
+
+                                                <div class="enquiry-date">
+
+                                                    <i class="fa-regular fa-calendar"></i>
+
+                                                    <span>
+                                                        @item.EventDate.ToString("MMM dd, yyyy")
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+                                            <!-- BUDGET -->
+                                            <td>
+                                                <span class="enquiry-created-date">
+                                                    &#8360;@item.Budget.ToString("N0")
+                                                </span>
+                                            </td>
+
+                                            <!-- GUEST COUNT -->
+                                            <td>
+                                                <span class="enquiry-created-date">
+                                                    @item.GuestCount
+                                                </span>
+                                            </td>
+
+                                            <!-- STATUS -->
+                                            <td>
+
+                                                @if (item.Status == "Pending")
+                                                {
+                                                    <span class="enquiry-status pending">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        Pending
+                                                    </span>
+                                                }
+                                                else if (item.Status == "Quoted")
+                                                {
+                                                    <span class="enquiry-status quoted">
+                                                        <i class="fa-solid fa-file-invoice"></i>
+                                                        Quoted
+                                                    </span>
+                                                }
+                                                else if (item.Status == "Accepted")
+                                                {
+                                                    <span class="enquiry-status accepted">
+                                                        <i class="fa-solid fa-circle-check"></i>
+                                                        Accepted
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="enquiry-status other">
+                                                        @item.Status
+                                                    </span>
+                                                }
+
+                                            </td>
+
+
+                                            <!-- CREATED DATE -->
+                                            <td>
+
+                                                <span class="enquiry-created-date">
+                                                    @item.CreatedAt.ToString("MMM dd, yyyy")
+                                                </span>
+
+                                            </td>
+
+
+                                            <!-- ACTION -->
+                                            <td>
+
+                                                <a asp-action="Details"
+                                                   asp-route-id="@item.Id"
+                                                   class="enquiry-view-button">
+
+                                                    View Details
+
+                                                    <i class="fa-solid fa-arrow-right"></i>
+
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                }
+                else
+                {
+
+                    <!-- EMPTY STATE -->
+                    <div class="enquiry-empty-state">
+
+                        <div class="enquiry-empty-icon">
+
+                            <i class="fa-regular fa-paper-plane"></i>
+
+                        </div>
+
+                        <h3>
+                            No enquiries yet
+                        </h3>
+
+                        <p>
+                            You haven't sent any event enquiries yet.
+                            Find a planner and start your event journey.
+                        </p>
+
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <a asp-controller="Search"
+                               asp-action="Index"
+                               class="enquiry-find-button">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                Find Planners
+
+                            </a>
+                        }
+
+                    </div>
+
+                }
+
+            </section>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-enqiry.css"
+          asp-append-version="true" />
+
+}

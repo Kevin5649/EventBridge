@@ -1,0 +1,254 @@
+@model EventBridge.ViewModels.QuotationCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Quotation";
+}
+
+<link rel="stylesheet" href="~/css/customer-sidebar.css" />
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+<link rel="stylesheet" href="~/css/planner-dashboard.css" />
+
+<div class="planner-dashboard">
+
+    <partial name="_UserSidebar" />
+
+    <main class="planner-dashboard-content quotation-content">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header quotation-header">
+
+            <div>
+                <span class="quotation-eyebrow">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    New Quotation
+                </span>
+
+                <h2>Create Quotation</h2>
+
+                <p>
+                    Prepare a clear quotation based on the customer's enquiry.
+                </p>
+            </div>
+
+            <a asp-controller="Enquiry"
+               asp-action="Details"
+               asp-route-id="@Model.EnquiryId"
+               class="quotation-back-btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Enquiry
+
+            </a>
+
+        </div>
+
+
+        <!-- Enquiry Reference -->
+        <div class="quotation-reference-card">
+
+            <div class="quotation-reference-icon">
+                <i class="fa-solid fa-file-lines"></i>
+            </div>
+
+            <div>
+                <span>Quotation for</span>
+
+                <h4>Enquiry #@Model.EnquiryId</h4>
+
+                <p>
+                    Review the customer's requirements before submitting your quotation.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Form -->
+        <div class="admin-table-card quotation-form-card">
+
+            <div class="admin-table-header quotation-form-header">
+
+                <div>
+                    <h3>Quotation Details</h3>
+
+                    <p>
+                        Provide pricing, included services and important terms.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="quotation-form-container">
+
+                <form asp-action="Create" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-4">
+                    </div>
+
+                    <input type="hidden" asp-for="EnquiryId" />
+
+
+                    <!-- Amount -->
+                    <div class="quotation-form-group">
+
+                        <label asp-for="Amount">
+
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            Total Quotation Amount
+
+                        </label>
+
+                        <div class="quotation-input-wrapper">
+
+                            <span class="quotation-currency">₹</span>
+
+                            <input asp-for="Amount"
+                                   class="quotation-form-control quotation-amount-input"
+                                   type="number"
+                                   step="0.01"
+                                   min="1"
+                                   placeholder="Enter total amount"
+                                   required />
+
+                        </div>
+
+                        <span asp-validation-for="Amount"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Services Included -->
+                    <div class="quotation-form-group">
+
+                        <label asp-for="ServicesIncluded">
+
+                            <i class="fa-solid fa-list-check"></i>
+                            Services Included
+
+                        </label>
+
+                        <textarea asp-for="ServicesIncluded"
+                                  class="quotation-form-control"
+                                  rows="5"
+                                  placeholder="List the services included in this quotation..."></textarea>
+
+                        <span asp-validation-for="ServicesIncluded"
+                              class="text-danger small">
+                        </span>
+
+                        <small>
+                            Mention services such as decoration, catering,
+                            photography, DJ, venue setup, etc.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Description -->
+                    <div class="quotation-form-group">
+
+                        <label asp-for="Description">
+
+                            <i class="fa-regular fa-file-lines"></i>
+                            Quotation Details
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="quotation-form-control quotation-description"
+                                  rows="6"
+                                  maxlength="2000"
+                                  placeholder="Provide a detailed breakdown of what the customer will receive..."
+                                  required></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Terms -->
+                    <div class="quotation-form-group">
+
+                        <label asp-for="TermsAndNotes">
+
+                            <i class="fa-solid fa-circle-info"></i>
+                            Terms & Notes
+
+                        </label>
+
+                        <textarea asp-for="TermsAndNotes"
+                                  class="quotation-form-control"
+                                  rows="5"
+                                  placeholder="Mention advance payment, cancellation policy, validity, additional charges or other important terms..."></textarea>
+
+                        <span asp-validation-for="TermsAndNotes"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Info -->
+                    <div class="quotation-info-box">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <div>
+
+                            <strong>Before sending</strong>
+
+                            <p>
+                                Make sure the total amount and included services
+                                are clear. The customer will be able to review
+                                this quotation before accepting or rejecting it.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Actions -->
+                    <div class="quotation-form-actions">
+
+                        <a asp-controller="Enquiry"
+                           asp-action="Details"
+                           asp-route-id="@Model.EnquiryId"
+                           class="quotation-cancel-btn">
+
+                            Cancel
+
+                        </a>
+
+                        <button type="submit"
+                                class="quotation-submit-btn">
+
+                            Send Quotation
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

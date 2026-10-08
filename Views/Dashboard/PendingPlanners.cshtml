@@ -1,0 +1,198 @@
+﻿@model IEnumerable<EventBridge.Models.EventPlanner>
+
+@{
+    ViewData["Title"] = "Pending Planner Verifications";
+}
+
+<link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/customer-sidebar.css" asp-append-version="true" />
+
+<div class="dashboard-page admin-dashboard-page">
+
+    <partial name="_UserSidebar" />
+
+    <main class="admin-dashboard-content">
+
+        <!-- Header -->
+        <div class="admin-dashboard-header">
+
+            <div>
+                <h2>Pending Planner Verifications</h2>
+                <p>Review and verify event planners based on their ratings and profile information.</p>
+            </div>
+
+        </div>
+
+
+        <!-- Back to Dashboard -->
+        <div style="margin-bottom: 20px;">
+
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="admin-view-btn">
+
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- Pending Planners -->
+        <div class="admin-table-card">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>Planner Verification Queue</h3>
+
+                    <p>
+                        Planners are displayed with the highest average rating first.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Company</th>
+
+                            <th>Email</th>
+
+                            <th>Experience</th>
+
+                            <th>Avg. Rating</th>
+
+                            <th>Reviews</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var planner in Model)
+                        {
+                            <tr>
+
+                                <!-- Company -->
+                                <td>
+                                    <strong>
+                                        @planner.CompanyName
+                                    </strong>
+                                </td>
+
+
+                                <!-- Email -->
+                                <td>
+                                    @planner.User?.Email
+                                </td>
+
+
+                                <!-- Experience -->
+                                <td>
+                                    @planner.Experience years
+                                </td>
+
+
+                                <!-- Average Rating -->
+                                <td>
+
+                                    <strong>
+                                        @planner.AvgRating.ToString("0.0") ⭐
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- Review Count -->
+                                <td>
+                                    @planner.ReviewCount
+                                </td>
+
+
+                                <!-- Status -->
+                                <td>
+
+                                    <span class="admin-status pending">
+                                        Pending
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td>
+
+                                    <div class="admin-action-buttons">
+
+                                        <!-- Verify -->
+                                        <form asp-controller="Admin"
+                                              asp-action="VerifyPlanner"
+                                              method="post">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@planner.PlannerId" />
+                                            <input type="hidden"
+                                                   name="returnPage"
+                                                   value="PendingPlanners" />
+
+                                            <button type="submit"
+                                                    class="admin-action verify">
+
+                                                Verify
+
+                                            </button>
+
+                                        </form>
+
+
+                                        
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+
+                        @if (!Model.Any())
+                        {
+                            <tr>
+
+                                <td colspan="7"
+                                    class="admin-empty">
+
+                                    No pending planner verifications.
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>

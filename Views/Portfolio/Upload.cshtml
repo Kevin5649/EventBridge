@@ -1,0 +1,157 @@
+@model EventBridge.ViewModels.PortfolioUploadViewModel
+
+@{
+    ViewData["Title"] = "Upload Portfolio Image";
+}
+
+<div class="planner-dashboard">
+
+    <!-- SHARED ROLE-BASED SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- PAGE CONTENT -->
+    <section class="planner-dashboard-content">
+
+        <div class="planner-portfolio-page">
+
+            <!-- HEADER -->
+            <div class="planner-portfolio-header">
+
+                <div>
+                    <span class="planner-portfolio-eyebrow">
+                        MY PORTFOLIO
+                    </span>
+
+                    <h1>
+                        Add to your portfolio
+                    </h1>
+
+                    <p>
+                        Showcase your best event work and help customers
+                        understand what you can create.
+                    </p>
+                </div>
+
+                <a asp-action="Index"
+                   class="planner-portfolio-back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Portfolio
+                </a>
+
+            </div>
+
+
+            <!-- UPLOAD FORM -->
+            <div class="planner-portfolio-upload-wrapper">
+
+                <div class="planner-portfolio-upload-card">
+
+                    <div class="planner-portfolio-upload-icon">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+
+                    <h2>
+                        Upload Image
+                    </h2>
+
+                    <p class="planner-portfolio-upload-subtitle">
+                        Add a photo from one of your events.
+                    </p>
+
+
+                    <form asp-action="Upload"
+                          enctype="multipart/form-data"
+                          method="post">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+
+                        <!-- IMAGE -->
+                        <div class="planner-portfolio-form-group">
+
+                            <label asp-for="Image">
+                                Select Image
+                            </label>
+
+                            <input asp-for="Image"
+                                   class="form-control"
+                                   type="file"
+                                   accept="image/*"
+                                   required />
+
+                            <span asp-validation-for="Image"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- CAPTION -->
+                        <div class="planner-portfolio-form-group">
+
+                            <label asp-for="Caption">
+                                Caption
+                                <span>(Optional)</span>
+                            </label>
+
+                            <input asp-for="Caption"
+                                   class="form-control"
+                                   placeholder="Describe this event..." />
+
+                            <span asp-validation-for="Caption"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+                        <div class="planner-portfolio-upload-actions">
+
+                            <button type="submit"
+                                    class="planner-portfolio-upload-button">
+
+                                <i class="fa-solid fa-upload"></i>
+
+                                Upload Image
+
+                            </button>
+
+                            <a asp-action="Index"
+                               class="planner-portfolio-cancel-button">
+
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/planner-portfolio.css"
+          asp-append-version="true" />
+          <link rel="stylesheet"
+          href="~/css/planner-dashboard.css"
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}

@@ -1,0 +1,221 @@
+@model IEnumerable<EventBridge.Models.PlannerPortfolio>
+
+@{
+    ViewData["Title"] = "My Portfolio";
+}
+
+<div class="planner-portfolio">
+
+    <!-- SHARED ROLE-BASED SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- PORTFOLIO CONTENT -->
+    <main class="planner-portfolio-content">
+
+        <!-- HEADER -->
+        <section class="portfolio-welcome">
+
+            <div>
+                <span class="portfolio-eyebrow">
+                    YOUR WORK
+                </span>
+
+                <h1>
+                    My Portfolio
+                </h1>
+
+                <p>
+                    Showcase your best events and let customers see
+                    what you can create.
+                </p>
+            </div>
+
+
+            <a asp-action="Upload"
+               class="portfolio-add-button">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Image
+
+            </a>
+
+        </section>
+
+
+        <!-- MESSAGES -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="portfolio-alert success">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+                <span>
+                    @TempData["SuccessMessage"]
+                </span>
+
+                <button type="button"
+                        class="portfolio-alert-close"
+                        onclick="this.parentElement.remove()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+        }
+
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="portfolio-alert error">
+
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <span>
+                    @TempData["ErrorMessage"]
+                </span>
+
+                <button type="button"
+                        class="portfolio-alert-close"
+                        onclick="this.parentElement.remove()">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+        }
+
+
+        <!-- PORTFOLIO -->
+        @if (Model.Any())
+        {
+
+            <section class="portfolio-section">
+
+                <div class="portfolio-section-heading">
+
+                    <div>
+                        <span>PORTFOLIO</span>
+
+                        <h2>
+                            Your event work
+                        </h2>
+                    </div>
+
+                    <span class="portfolio-count">
+                        @Model.Count() image(s)
+                    </span>
+
+                </div>
+
+
+                <div class="portfolio-grid">
+
+                    @foreach (var item in Model)
+                    {
+
+                        <article class="portfolio-card">
+
+                            <!-- IMAGE -->
+                            <div class="portfolio-image-wrapper">
+
+                                <img src="@item.ImagePath"
+                                     class="portfolio-image"
+                                     alt="Portfolio Image" />
+
+
+                                <!-- DELETE -->
+                                <form asp-action="Delete"
+                                      method="post"
+                                      class="portfolio-delete-form">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.PortfolioId" />
+
+                                    <button type="submit"
+                                            class="portfolio-delete-button"
+                                            onclick="return confirm('Delete this image?');"
+                                            title="Delete image">
+
+                                        <i class="fa-solid fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                            <!-- CAPTION -->
+                            <div class="portfolio-card-body">
+
+                                <p>
+                                    @(string.IsNullOrEmpty(item.Caption)
+                                        ? "No caption"
+                                        : item.Caption)
+                                </p>
+
+                            </div>
+
+                        </article>
+
+                    }
+
+                </div>
+
+            </section>
+
+        }
+        else
+        {
+
+            <!-- EMPTY STATE -->
+            <section class="portfolio-empty">
+
+                <div class="portfolio-empty-icon">
+
+                    <i class="fa-regular fa-images"></i>
+
+                </div>
+
+                <h2>
+                    Your portfolio is empty
+                </h2>
+
+                <p>
+                    Upload some of your best work to attract customers.
+                </p>
+
+                <a asp-action="Upload"
+                   class="portfolio-empty-button">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add your first image
+
+                </a>
+
+            </section>
+
+        }
+
+    </main>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/planner-portfolio.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}

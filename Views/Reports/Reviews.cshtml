@@ -1,0 +1,88 @@
+@model IEnumerable<EventBridge.Models.Review>
+
+@{
+    ViewData["Title"] = "Review Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-primary">Customer Reviews Analytics</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Back to Reports</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4 bg-light rounded-4">
+            <form asp-action="Reviews" method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label text-muted fw-semibold">Filter by Rating</label>
+                    <select name="ratingFilter" class="form-select">
+                        <option value="">All Ratings</option>
+                        <option value="5" selected="@(ViewBag.RatingFilter == 5)">5 Stars</option>
+                        <option value="4" selected="@(ViewBag.RatingFilter == 4)">4 Stars</option>
+                        <option value="3" selected="@(ViewBag.RatingFilter == 3)">3 Stars</option>
+                        <option value="2" selected="@(ViewBag.RatingFilter == 2)">2 Stars</option>
+                        <option value="1" selected="@(ViewBag.RatingFilter == 1)">1 Star</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary shadow-sm w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted">
+                        <tr>
+                            <th class="ps-4">Rating</th>
+                            <th>Review</th>
+                            <th>Customer</th>
+                            <th>Planner</th>
+                            <th class="text-end pe-4">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="text-warning fs-5">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < item.Rating)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star text-muted opacity-25"></i>
+                                            }
+                                        }
+                                    </span>
+                                </td>
+                                <td style="max-width: 300px;">
+                                    <div class="text-truncate" title="@item.Comment">@item.Comment</div>
+                                </td>
+                                <td>@item.Customer?.User?.FullName</td>
+                                <td>@item.EventPlanner?.CompanyName</td>
+                                <td class="text-end pe-4 text-muted">@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">No reviews found matching the criteria.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 p-3 text-muted small text-end">
+            Total Reviews: @Model.Count()
+        </div>
+    </div>
+</div>

@@ -1,0 +1,275 @@
+@model EventBridge.ViewModels.EnquiryCreateViewModel
+
+@{
+    ViewData["Title"] = "Request Quote";
+}
+
+<link rel="stylesheet" href="~/css/customer-sidebar.css" />
+<link rel="stylesheet" href="~/css/admin-dashboard.css" />
+<link rel="stylesheet" href="~/css/customer-dashboard.css" />
+
+<div class="customer-dashboard">
+
+    <partial name="_UserSidebar" />
+
+    <main class="customer-dashboard-content enquiry-content">
+
+        <div class="admin-dashboard-header enquiry-header">
+            <div>
+                <span class="enquiry-eyebrow">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    New Enquiry
+                </span>
+
+                <h2>Request a Quote</h2>
+
+                <p>
+                    Tell your planner what you need for your upcoming event.
+                </p>
+            </div>
+
+            <a asp-controller="Search"
+               asp-action="Profile"
+               asp-route-id="@Model.PlannerId"
+               class="enquiry-back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Planner
+            </a>
+        </div>
+
+        <div class="enquiry-planner-card">
+
+            <div class="enquiry-planner-icon">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+
+            <div>
+                <span>Sending enquiry to</span>
+
+                <h4>@Model.PlannerName</h4>
+
+                <p>
+                    Your requirements will be sent directly to this planner.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="admin-table-card enquiry-form-card">
+
+            <div class="admin-table-header enquiry-form-header">
+                <div>
+                    <h3>Event Requirements</h3>
+
+                    <p>
+                        Provide the details below so the planner can prepare
+                        an appropriate quotation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="enquiry-form-container">
+
+                <form asp-action="Create" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-4">
+                    </div>
+
+                    <input type="hidden" asp-for="PlannerId" />
+                    <input type="hidden" asp-for="PlannerName" />
+
+                    <!-- Event Type -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="CategoryId">
+                            <i class="fa-solid fa-layer-group"></i>
+                            Event Type
+                        </label>
+
+                        <select asp-for="CategoryId"
+                                asp-items="Model.Categories"
+                                class="enquiry-form-control">
+
+                            <option value="">
+                                Select your event type
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="CategoryId"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <!-- Event Date -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="EventDate">
+                            <i class="fa-regular fa-calendar"></i>
+                            Event Date
+                        </label>
+
+                        <input asp-for="EventDate"
+                               class="enquiry-form-control"
+                               type="date"
+                               required
+                               min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+                        <span asp-validation-for="EventDate"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <!-- Budget -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="Budget">
+                            <i class="fa-solid fa-indian-rupee-sign"></i>
+                            Estimated Budget
+                        </label>
+
+                        <input asp-for="Budget"
+                               class="enquiry-form-control"
+                               type="number"
+                               min="1"
+                               step="0.01"
+                               placeholder="Enter your estimated budget" />
+
+                        <span asp-validation-for="Budget"
+                              class="text-danger small">
+                        </span>
+
+                        <small>
+                            This helps the planner prepare a suitable quotation.
+                        </small>
+
+                    </div>
+
+                    <!-- Guest Count -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="GuestCount">
+                            <i class="fa-solid fa-users"></i>
+                            Expected Guests
+                        </label>
+
+                        <input asp-for="GuestCount"
+                               class="enquiry-form-control"
+                               type="number"
+                               min="1"
+                               placeholder="e.g. 200" />
+
+                        <span asp-validation-for="GuestCount"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <!-- Venue -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="Venue">
+                            <i class="fa-solid fa-location-dot"></i>
+                            Venue
+                        </label>
+
+                        <input asp-for="Venue"
+                               class="enquiry-form-control"
+                               placeholder="Enter venue or location" />
+
+                        <span asp-validation-for="Venue"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <!-- Required Services -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="RequiredServices">
+                            <i class="fa-solid fa-list-check"></i>
+                            Required Services
+                        </label>
+
+                        <textarea asp-for="RequiredServices"
+                                  class="enquiry-form-control"
+                                  rows="4"
+                                  placeholder="e.g. Decoration, Catering, Photography, DJ, Venue setup..."></textarea>
+
+                        <span asp-validation-for="RequiredServices"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <!-- Message -->
+                    <div class="enquiry-form-group">
+
+                        <label asp-for="Message">
+                            <i class="fa-regular fa-message"></i>
+                            Additional Requirements
+                        </label>
+
+                        <textarea asp-for="Message"
+                                  class="enquiry-form-control enquiry-message"
+                                  rows="6"
+                                  maxlength="2000"
+                                  placeholder="Describe any additional requirements, preferences or special requests..."
+                                  required></textarea>
+
+                        <span asp-validation-for="Message"
+                              class="text-danger small">
+                        </span>
+
+                    </div>
+
+                    <div class="enquiry-info-box">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <div>
+                            <strong>What happens next?</strong>
+
+                            <p>
+                                The planner will review your requirements and
+                                send you a quotation. You can review the
+                                quotation before deciding whether to book.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="enquiry-form-actions">
+
+                        <a asp-controller="Search"
+                           asp-action="Profile"
+                           asp-route-id="@Model.PlannerId"
+                           class="enquiry-cancel-btn">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="enquiry-submit-btn">
+
+                            Send Enquiry
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

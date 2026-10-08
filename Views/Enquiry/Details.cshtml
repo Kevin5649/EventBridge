@@ -1,0 +1,465 @@
+@model EventBridge.Models.Enquiry
+
+@{
+    ViewData["Title"] = "Enquiry Details";
+    bool isPlanner = User.IsInRole("EventPlanner");
+}
+
+<link rel="stylesheet"
+      href="~/css/planner-sidebar.css"
+      asp-append-version="true" />
+
+<link rel="stylesheet"
+      href="~/css/admin-dashboard.css"
+      asp-append-version="true" />
+
+<link rel="stylesheet"
+      href="~/css/planner-dashboard.css"
+      asp-append-version="true" />
+
+<link rel="stylesheet"
+      href="~/css/customer-sidebar.css"
+      asp-append-version="true" />
+
+
+<div class="planner-dashboard">
+
+    <!-- SIDEBAR -->
+    <partial name="_UserSidebar" />
+
+
+    <!-- MAIN CONTENT -->
+    <main class="planner-dashboard-content">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <div class="text-muted small text-uppercase fw-bold">
+                    Enquiry Details
+                </div>
+
+                <h2 class="fw-bold mt-1">
+                    Enquiry #@Model.Id
+                </h2>
+
+                <p class="text-muted mb-0">
+                    View the complete event requirements and planner response.
+                </p>
+            </div>
+
+            <div>
+                <a asp-controller="Enquiry"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary rounded-pill px-4">
+
+                    <i class="fa-solid fa-arrow-left me-1"></i>
+                    Back to Enquiry
+
+                </a>
+            </div>
+
+        </div>
+
+
+        <!-- SUCCESS MESSAGE -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm"
+                 role="alert">
+
+                <i class="fa-solid fa-circle-check me-2"></i>
+
+                @TempData["SuccessMessage"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+        }
+
+
+        <!-- EVENT OVERVIEW -->
+        <div class="admin-table-card mb-4">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>
+                        Event Overview
+                    </h3>
+
+                    <p>
+                        Basic information about this event enquiry.
+                    </p>
+                </div>
+
+                <div>
+
+                    @if (Model.Status == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                            <i class="fa-regular fa-clock me-1"></i>
+                            Pending
+                        </span>
+                    }
+                    else if (Model.Status == "Quoted")
+                    {
+                        <span class="badge bg-primary rounded-pill px-3 py-2">
+                            <i class="fa-solid fa-file-invoice me-1"></i>
+                            Quoted
+                        </span>
+                    }
+                    else if (Model.Status == "Accepted")
+                    {
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            <i class="fa-solid fa-circle-check me-1"></i>
+                            Accepted
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary rounded-pill px-3 py-2">
+                            @Model.Status
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="p-4">
+
+                <div class="row g-3">
+
+                    <!-- EVENT TYPE -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Event Type
+                            </div>
+
+                            <div class="fw-bold">
+                                @(Model.Category?.Name ?? "Not specified")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EVENT DATE -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Event Date
+                            </div>
+
+                            <div class="fw-bold">
+                                @Model.EventDate.ToString("MMMM dd, yyyy")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BUDGET -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Budget
+                            </div>
+
+                            <div class="fw-bold">
+                                INR @Model.Budget.ToString("N0")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- GUEST COUNT -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Guest Count
+                            </div>
+
+                            <div class="fw-bold">
+                                @Model.GuestCount
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- VENUE -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Venue
+                            </div>
+
+                            <div class="fw-bold">
+                                @(string.IsNullOrWhiteSpace(Model.Venue)
+                                    ? "Not specified"
+                                    : Model.Venue)
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SENT ON -->
+                    <div class="col-md-4">
+
+                        <div class="p-3 bg-light rounded-3 h-100">
+
+                            <div class="text-muted small mb-1">
+                                Sent On
+                            </div>
+
+                            <div class="fw-bold">
+                                @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- USER / PLANNER INFORMATION -->
+        <div class="admin-table-card mb-4">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>
+                        @(isPlanner
+                            ? "Customer Information"
+                            : "Planner Information")
+                    </h3>
+
+                    <p>
+                        Contact information for this enquiry.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="p-4">
+
+                <div class="row g-4">
+
+                    @if (isPlanner)
+                    {
+                        <div class="col-md-6">
+
+                            <div class="p-3 border rounded-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    Customer Name
+                                </div>
+
+                                <div class="fw-bold">
+                                    @Model.Customer?.User?.FullName
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="p-3 border rounded-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    Email
+                                </div>
+
+                                <div>
+                                    @Model.Customer?.User?.Email
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6">
+
+                            <div class="p-3 border rounded-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    Planner / Company
+                                </div>
+
+                                <div class="fw-bold">
+                                    @Model.EventPlanner?.CompanyName
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="p-3 border rounded-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    Email
+                                </div>
+
+                                <div>
+                                    @Model.EventPlanner?.User?.Email
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REQUIRED SERVICES -->
+        <div class="admin-table-card mb-4">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>
+                        Required Services
+                    </h3>
+
+                    <p>
+                        Services requested for this event.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="p-4">
+
+                <div class="p-4 bg-light rounded-3">
+
+                    @if (string.IsNullOrWhiteSpace(Model.RequiredServices))
+                    {
+                        <span class="text-muted">
+                            No specific services were provided.
+                        </span>
+                    }
+                    else
+                    {
+                        <p class="mb-0"
+                           style="white-space: pre-wrap;">
+                            @Model.RequiredServices
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+        <div class="admin-table-card mb-4">
+
+            <div class="admin-table-header">
+
+                <div>
+                    <h3>
+                        Message / Requirements
+                    </h3>
+
+                    <p>
+                        Additional information provided by the customer.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="p-4">
+
+                <div class="p-4 bg-light rounded-3">
+
+                    <p class="mb-0"
+                       style="white-space: pre-wrap;">
+                        @Model.Message
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="d-flex gap-2 mb-4">
+
+            @if (isPlanner && Model.Status == "Pending")
+            {
+                <a asp-controller="Quotation"
+                   asp-action="Create"
+                   asp-route-enquiryId="@Model.Id"
+                   class="btn btn-primary btn-lg rounded-pill px-4">
+
+                    <i class="fa-solid fa-file-invoice me-1"></i>
+                    Send Quotation
+
+                </a>
+            }
+            else if (!isPlanner &&
+            Model.Status == "Quoted" &&
+            Model.Quotation != null)
+            {
+                <a asp-controller="Quotation"
+                   asp-action="Details"
+                   asp-route-id="@Model.Quotation?.Id"
+                   class="btn btn-success btn-lg rounded-pill px-4">
+
+                    <i class="fa-solid fa-file-invoice me-1"></i>
+                    View Quotation
+
+                </a>
+            }
+
+        </div>
+
+    </main>
+
+</div>

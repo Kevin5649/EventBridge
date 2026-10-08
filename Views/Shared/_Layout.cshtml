@@ -1,0 +1,260 @@
+@using Microsoft.AspNetCore.Identity
+@using EventBridge.Models
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - EventBridge</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Existing Common CSS -->
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <!-- Page Specific CSS -->
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="eb-header">
+
+        <div class="eb-header-left">
+
+            <!-- Sidebar toggle -->
+            <button type="button"
+                    class="sidebar-toggle"
+                    id="sidebarToggle"
+                    aria-label="Toggle sidebar">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+            <!-- EventBridge Logo -->
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="eb-logo">
+
+                <span class="eb-logo-icon">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </span>
+
+                <span>EventBridge</span>
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= HEADER RIGHT ================= -->
+
+        <div class="eb-header-right">
+
+            <!-- PROFILE DROPDOWN -->
+
+            <div class="dropdown">
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    var currentUser = await UserManager.GetUserAsync(User);
+
+                    <button class="header-profile-btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Account menu">
+
+                        <!-- Profile Image / Fallback Icon -->
+                        @if (!string.IsNullOrEmpty(currentUser?.ProfilePicturePath))
+                        {
+                            <img src="@currentUser.ProfilePicturePath"
+                                 alt="Profile"
+                                 class="header-profile-image" />
+                        }
+                        else
+                        {
+                            <span class="header-profile-icon">
+                                <i class="fa-regular fa-circle-user"></i>
+                            </span>
+                        }
+
+                        <!-- Name + Role -->
+                        <span class="header-profile-info">
+
+                            <span class="header-profile-name">
+                                @currentUser?.FullName
+                            </span>
+
+                            <span class="header-profile-role">
+                                @currentUser?.Role
+                            </span>
+
+                        </span>
+
+                    </button>
+                }
+                else
+                {
+                    <button class="header-profile-btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Account menu">
+
+                        <span class="header-profile-icon">
+                            <i class="fa-regular fa-circle-user"></i>
+                        </span>
+
+                    </button>
+                }
+
+
+                <!-- EXISTING DROPDOWN - UNCHANGED -->
+
+                <ul class="dropdown-menu dropdown-menu-end header-account-menu">
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Profile"
+                               asp-action="Index">
+
+                                <i class="fa-regular fa-user me-2"></i>
+                                Profile
+
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+
+                        <li>
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  id="logoutForm">
+
+                                <button type="submit"
+                                        class="dropdown-item header-logout-item">
+
+                                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
+                                    Logout
+
+                                </button>
+
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Account"
+                               asp-action="Login">
+
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>
+                                Login
+
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item"
+                               asp-controller="Account"
+                               asp-action="RegisterCustomer">
+
+                                <i class="fa-solid fa-user-plus me-2"></i>
+                                Register
+
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main role="main">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="eb-footer">
+
+        <div class="footer-inner">
+
+            <div class="footer-brand">
+
+                <strong>EventBridge</strong>
+
+                <span>
+                    Connecting customers with event planners.
+                </span>
+
+            </div>
+
+            <div class="footer-copy">
+
+                &copy; @DateTime.Now.Year EventBridge
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+    <!-- Existing Site JS -->
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+    <!-- Page Specific Scripts -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+@model EventBridge.ViewModels.PlannerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Planner Dashboard";
+}
+
+<div class="planner-dashboard">
+
+    <!-- SHARED ROLE-BASED SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- PLANNER DASHBOARD CONTENT -->
+    <main class="planner-dashboard-content">
+
+        <!-- HEADER -->
+        <section class="planner-welcome">
+
+            <div>
+                <span class="planner-eyebrow">
+                    PLANNER DASHBOARD
+                </span>
+
+                <h1>
+                    Welcome back!
+                </h1>
+
+                <p>
+                    Manage your enquiries, bookings, portfolio and events
+                    from one place.
+                </p>
+            </div>
+
+            @* <a asp-controller="Account" *@
+            @*    asp-action="Logout" *@
+            @*    class="planner-logout-btn"> *@
+
+            @*     <i class="fa-solid fa-right-from-bracket"></i> *@
+
+            @*     Logout *@
+
+            @* </a> *@
+
+        </section>
+
+
+        <!-- TOP SUMMARY -->
+        <section class="planner-summary">
+
+            <!-- Pending Enquiries -->
+            <div class="planner-summary-card">
+
+                <div class="planner-summary-icon enquiry-icon">
+                    <i class="fa-regular fa-paper-plane"></i>
+                </div>
+
+                <div>
+                    <span>Pending Enquiries</span>
+                    <strong>@Model.PendingEnquiries</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Pending Quotations -->
+            <div class="planner-summary-card">
+
+                <div class="planner-summary-icon quotation-icon">
+                    <i class="fa-solid fa-file-invoice"></i>
+                </div>
+
+                <div>
+                    <span>Pending Quotes</span>
+                    <strong>@Model.PendingQuotations</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Upcoming Events -->
+            <div class="planner-summary-card">
+
+                <div class="planner-summary-icon booking-icon">
+                    <i class="fa-regular fa-calendar-check"></i>
+                </div>
+
+                <div>
+                    <span>Upcoming Events</span>
+                    <strong>@Model.UpcomingEvents</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Completed Events -->
+            <div class="planner-summary-card">
+
+                <div class="planner-summary-icon completed-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div>
+                    <span>Completed Events</span>
+                    <strong>@Model.CompletedEvents</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SECONDARY STATS -->
+        <section class="planner-secondary-stats">
+
+            <!-- Earnings -->
+            <div class="planner-stat-card">
+
+                <div>
+                    <span>Total Earnings</span>
+
+                    <strong>
+                        ₹@Model.Earnings.ToString("N0")
+                    </strong>
+                </div>
+
+                <i class="fa-solid fa-wallet planner-stat-icon"></i>
+
+            </div>
+
+
+            <!-- Rating -->
+            <div class="planner-stat-card">
+
+                <div>
+                    <span>Average Rating</span>
+
+                    <strong>
+                        @Model.AverageRating.ToString("0.0")
+                        <i class="fa-solid fa-star"></i>
+                    </strong>
+                </div>
+
+                <i class="fa-regular fa-star planner-stat-icon"></i>
+
+            </div>
+
+
+            <!-- Reviews -->
+            <div class="planner-stat-card">
+
+                <div>
+                    <span>Total Reviews</span>
+
+                    <strong>
+                        @Model.TotalReviews
+                    </strong>
+                </div>
+
+                <i class="fa-regular fa-comment planner-stat-icon"></i>
+
+            </div>
+
+        </section>
+
+
+        <!-- MAIN DASHBOARD GRID -->
+        <section class="planner-main-grid">
+
+
+            <!-- QUICK ACTIONS -->
+            <div class="planner-actions-card">
+
+                <div class="planner-section-heading">
+
+                    <div>
+                        <span>QUICK ACTIONS</span>
+
+                        <h2>
+                            Manage your work
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <!-- Enquiries -->
+                <a asp-controller="Enquiry"
+                   asp-action="Index"
+                   class="planner-action-item">
+
+                    <div class="planner-action-icon enquiry-action">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </div>
+
+                    <div>
+                        <strong>Manage Enquiries</strong>
+
+                        <span>
+                            Review requests and send quotations.
+                        </span>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </a>
+
+
+                <!-- Portfolio -->
+                <a asp-controller="Portfolio"
+                   asp-action="Index"
+                   class="planner-action-item">
+
+                    <div class="planner-action-icon portfolio-action">
+                        <i class="fa-regular fa-images"></i>
+                    </div>
+
+                    <div>
+                        <strong>Manage Portfolio</strong>
+
+                        <span>
+                            Upload and manage your event photos.
+                        </span>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </a>
+
+
+                <!-- Bookings -->
+                <a asp-controller="Booking"
+                   asp-action="Index"
+                   class="planner-action-item">
+
+                    <div class="planner-action-icon booking-action">
+                        <i class="fa-regular fa-calendar-check"></i>
+                    </div>
+
+                    <div>
+                        <strong>Manage Bookings</strong>
+
+                        <span>
+                            View and manage your upcoming events.
+                        </span>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- RECENT BOOKINGS -->
+            <div class="planner-bookings-card">
+
+                <div class="planner-section-heading">
+
+                    <div>
+                        <span>RECENT ACTIVITY</span>
+
+                        <h2>
+                            Recent Bookings
+                        </h2>
+                    </div>
+
+                    <a asp-controller="Booking"
+                       asp-action="Index">
+                        View all
+                    </a>
+
+                </div>
+
+
+                <div class="planner-booking-list">
+
+                    @foreach (var booking in Model.RecentBookings)
+                    {
+
+                        <div class="planner-booking-item">
+
+
+                            <!-- DATE -->
+                            <div class="planner-booking-date">
+
+                                <span>
+                                    @booking.Quotation?.Enquiry?.EventDate.ToString("MMM")
+                                </span>
+
+                                <strong>
+                                    @booking.Quotation?.Enquiry?.EventDate.ToString("dd")
+                                </strong>
+
+                            </div>
+
+
+                            <!-- CUSTOMER -->
+                            <div class="planner-booking-info">
+
+                                <strong>
+                                    @booking.Quotation?.Enquiry?.Customer?.User?.FullName
+                                </strong>
+
+                                <span>
+                                    Booking #@booking.Id
+                                </span>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+                            <div>
+
+                                @if (booking.Status == "Upcoming")
+                                {
+                                    <span class="planner-status upcoming">
+                                        Upcoming
+                                    </span>
+                                }
+                                else if (booking.Status == "Confirmed")
+                                {
+                                    <span class="planner-status confirmed">
+                                        Confirmed
+                                    </span>
+                                }
+                                else if (booking.Status == "Completed")
+                                {
+                                    <span class="planner-status completed">
+                                        Completed
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="planner-status">
+                                        @booking.Status
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            <!-- DETAILS -->
+                            <a asp-controller="Booking"
+                               asp-action="Details"
+                               asp-route-id="@booking.Id"
+                               class="planner-booking-arrow">
+
+                                <i class="fa-solid fa-chevron-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    }
+
+
+                    @if (!Model.RecentBookings.Any())
+                    {
+                        <div class="planner-empty-state">
+
+                            <div>
+                                <i class="fa-regular fa-calendar"></i>
+                            </div>
+
+                            <h3>
+                                No recent bookings
+                            </h3>
+
+                            <p>
+                                Your recent bookings will appear here.
+                            </p>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/planner-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}

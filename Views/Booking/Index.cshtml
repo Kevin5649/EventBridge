@@ -1,0 +1,330 @@
+@model IEnumerable<EventBridge.Models.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="customer-dashboard">
+
+    <!-- CUSTOMER SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- BOOKING PAGE CONTENT -->
+    <section class="customer-dashboard-content">
+
+        <div class="booking-page">
+
+            <!-- PAGE INTRO -->
+            <section class="booking-hero">
+
+                <span class="booking-eyebrow">
+                    YOUR EVENTS
+                </span>
+
+                <h1>
+                    My Bookings
+                </h1>
+
+                <p>
+                    Keep track of your confirmed events, upcoming bookings
+                    and completed events in one place.
+                </p>
+
+            </section>
+
+
+            <!-- SUCCESS MESSAGE -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="booking-success-message">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        @TempData["SuccessMessage"]
+                    </span>
+
+                    <button type="button"
+                            class="booking-close-button"
+                            onclick="this.parentElement.remove()">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+            }
+
+
+            <!-- BOOKINGS SECTION -->
+            <section class="booking-section">
+
+                <div class="booking-section-heading">
+
+                    <div>
+
+                        <span>BOOKINGS</span>
+
+                        <h2>
+                            Your event bookings
+                        </h2>
+
+                    </div>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <span class="booking-count">
+                            @Model.Count() booking(s)
+                        </span>
+                    }
+
+                </div>
+
+
+                @if (Model != null && Model.Any())
+                {
+
+                    <div class="booking-table-card">
+
+                        <div class="booking-table-wrapper">
+
+                            <table class="booking-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Booking</th>
+
+                                        <th>
+                                            @(User.IsInRole("Customer")
+                                                ? "Planner"
+                                                : "Customer")
+                                        </th>
+
+                                        <th>Event Date</th>
+
+                                        <th>Total Amount</th>
+
+                                        <th>Status</th>
+
+                                        <th class="booking-action-heading">
+                                            Action
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    @foreach (var item in Model)
+                                    {
+
+                                        <tr>
+
+                                            <!-- BOOKING ID -->
+                                            <td>
+
+                                                <div class="booking-id">
+
+                                                    <div class="booking-id-icon">
+                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                    </div>
+
+                                                    <div>
+
+                                                        <strong>
+                                                            #@item.Id
+                                                        </strong>
+
+                                                        <small>
+                                                            Booking
+                                                        </small>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- PLANNER -->
+                                            <td>
+
+                                                <div class="booking-planner">
+
+                                                    <div class="booking-planner-icon">
+                                                        <i class="fa-regular fa-user"></i>
+                                                    </div>
+
+                                                    <span>
+                                                        @(User.IsInRole("Customer")
+                                                            ? item.Quotation?.Enquiry?.EventPlanner?.CompanyName
+                                                            : item.Quotation?.Enquiry?.Customer?.User?.FullName)
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- EVENT DATE -->
+                                            <td>
+
+                                                <div class="booking-date">
+
+                                                    <i class="fa-regular fa-calendar"></i>
+
+                                                    <span>
+                                                        @item.Quotation?.Enquiry?.EventDate.ToString("MMM dd, yyyy")
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- AMOUNT -->
+                                            <td>
+
+                                                <strong class="booking-amount">
+                                                    ₹@item.TotalAmount.ToString("N2")
+                                                </strong>
+
+                                            </td>
+
+
+                                            <!-- STATUS -->
+                                            <td>
+
+                                                @if (item.Status == "Upcoming")
+                                                {
+                                                    <span class="booking-status upcoming">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        Upcoming
+                                                    </span>
+                                                }
+                                                else if (item.Status == "Confirmed")
+                                                {
+                                                    <span class="booking-status confirmed">
+                                                        <i class="fa-solid fa-circle-check"></i>
+                                                        Confirmed
+                                                    </span>
+                                                }
+                                                else if (item.Status == "Completed")
+                                                {
+                                                    <span class="booking-status completed">
+                                                        <i class="fa-solid fa-check"></i>
+                                                        Completed
+                                                    </span>
+                                                }
+                                                else if (item.Status == "Cancelled")
+                                                {
+                                                    <span class="booking-status cancelled">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                        Cancelled
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="booking-status other">
+                                                        @item.Status
+                                                    </span>
+                                                }
+
+                                            </td>
+
+
+                                            <!-- ACTION -->
+                                            <td class="booking-action">
+
+                                                <a asp-action="Details"
+                                                   asp-route-id="@item.Id"
+                                                   class="booking-view-button">
+
+                                                    View details
+
+                                                    <i class="fa-solid fa-arrow-right"></i>
+
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                }
+                else
+                {
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="booking-empty-state">
+
+                        <div class="booking-empty-icon">
+
+                            <i class="fa-regular fa-calendar-xmark"></i>
+
+                        </div>
+
+                        <h3>
+                            No bookings yet
+                        </h3>
+
+                        <p>
+                            You don't have any event bookings yet.
+                            Find a planner and start planning your next event.
+                        </p>
+
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <a asp-controller="Search"
+                               asp-action="Index"
+                               class="booking-find-button">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                Find a planner
+
+                            </a>
+                        }
+
+                    </div>
+
+                }
+
+            </section>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-booking.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}

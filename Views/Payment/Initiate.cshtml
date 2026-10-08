@@ -1,0 +1,272 @@
+@model EventBridge.Models.Booking
+
+@{
+    ViewData["Title"] = "Make Payment";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body p-5 text-center">
+
+                    <i class="bi bi-shield-lock display-1 text-success mb-3"></i>
+
+                    <h3 class="fw-bold mb-4">
+                        Secure Payment
+                    </h3>
+
+                    <p class="text-muted mb-4">
+                        You are about to make a payment for
+                        Booking #@Model.Id with
+                        <strong>
+                            @Model.Quotation?.Enquiry?.EventPlanner?.CompanyName
+                        </strong>.
+                    </p>
+
+                    <div class="bg-light rounded-3 p-4 mb-4">
+
+                        <h5 class="text-muted mb-1">
+                            @ViewBag.PaymentType Payment
+                        </h5>
+
+                        <h2 class="display-4 fw-bold text-dark mb-0">
+                            ₹@ViewBag.Amount.ToString("N2")
+                        </h2>
+
+                    </div>
+
+
+                    <!-- Razorpay Checkout Form -->
+
+                    <form asp-action="Success"
+                          method="post"
+                          id="payment-form">
+
+                        <input type="hidden"
+                               name="bookingId"
+                               value="@ViewBag.BookingId" />
+
+                        <input type="hidden"
+                               name="amount"
+                               value="@ViewBag.Amount" />
+
+                        <input type="hidden"
+                               name="paymentType"
+                               value="@ViewBag.PaymentType" />
+
+                        <!-- Razorpay Payment ID -->
+                        <input type="hidden"
+                               name="transactionId"
+                               id="transactionId" />
+
+                        <!-- Razorpay Order ID -->
+                        <input type="hidden"
+                               name="razorpayOrderId"
+                               id="razorpayOrderId" />
+
+                        <!-- Razorpay Signature -->
+                        <input type="hidden"
+                               name="razorpaySignature"
+                               id="razorpaySignature" />
+
+                        <!-- Razorpay Payment Method -->
+                        <input type="hidden"
+                               name="paymentMethod"
+                               id="paymentMethod" />
+
+
+                        <div class="d-grid gap-2">
+
+                            <button type="button"
+                                    id="pay-btn"
+                                    class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm">
+
+                                Pay with Razorpay
+
+                            </button>
+
+                            <a asp-controller="Booking"
+                               asp-action="Details"
+                               asp-route-id="@Model.Id"
+                               class="btn btn-link text-muted text-decoration-none">
+
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <!-- Razorpay Checkout -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+
+        document.getElementById("pay-btn").addEventListener("click", function () {
+
+            const payButton = this;
+
+            payButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Opening Razorpay...';
+
+            payButton.disabled = true;
+
+
+            var options = {
+
+                // Public Razorpay Key ID only
+                key: "@ViewBag.RazorpayKeyId",
+
+                amount: @((int)(Convert.ToDecimal(ViewBag.Amount) * 100)),
+
+                currency: "INR",
+
+                name: "EventBridge",
+
+                description: "@ViewBag.PaymentType Payment - Booking #@Model.Id",
+
+                order_id: "@ViewBag.OrderId",
+
+
+                handler: function (response) {
+
+                    /*
+                     * Razorpay has successfully completed
+                     * the payment.
+                     *
+                     * Razorpay returns:
+                     * 1. Payment ID
+                     * 2. Order ID
+                     * 3. Signature
+                     * 4. Payment method
+                     */
+
+                    document.getElementById("transactionId").value =
+                        response.razorpay_payment_id;
+
+                    document.getElementById("razorpayOrderId").value =
+                        response.razorpay_order_id;
+
+                    document.getElementById("razorpaySignature").value =
+                        response.razorpay_signature;
+
+
+                    // Razorpay returns values such as:
+                    // "upi", "card", "netbanking", "wallet"
+                    document.getElementById("paymentMethod").value =
+                        response.method || "Online";
+
+
+                    // Submit payment information to .NET
+                    // using POST, not URL parameters.
+                    document.getElementById("payment-form").submit();
+
+                },
+
+
+                prefill: {
+
+                    name: "@Model.Quotation?.Enquiry?.Customer?.User?.FullName",
+
+                    email: "@Model.Quotation?.Enquiry?.Customer?.User?.Email"
+
+                },
+
+
+                theme: {
+
+                    color: "#52796f"
+
+                },
+
+
+                modal: {
+
+                    ondismiss: function () {
+
+                        payButton.innerHTML =
+                            "Pay with Razorpay";
+
+                        payButton.disabled = false;
+
+                    }
+
+                }
+
+            };
+
+
+            var razorpay = new Razorpay(options);
+
+            let paymentFailureHandled = false;
+
+                    razorpay.on("payment.failed", function (response) {
+
+            if (paymentFailureHandled) {
+                return;
+            }
+
+            paymentFailureHandled = true;
+
+            console.error(
+                "Razorpay payment failed:",
+                response.error
+            );
+
+            // Notify the server so the failed payment
+            // can be recorded and the failure email can be sent.
+            fetch("@Url.Action("PaymentFailed", "Payment")", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    bookingId: @Model.Id,
+                    amount: @ViewBag.Amount,
+                    paymentType: "@ViewBag.PaymentType",
+                    transactionId:
+                        response.error.metadata?.payment_id || "",
+                    errorDescription:
+                        response.error.description
+                })
+            }).catch(function (error) {
+                console.error(
+                    "Could not send payment failure notification:",
+                    error
+                );
+            });
+
+            alert(
+                "Payment failed: " +
+                response.error.description
+            );
+
+            payButton.innerHTML =
+                "Pay with Razorpay";
+
+            payButton.disabled = false;
+        });
+
+
+            razorpay.open();
+
+        });
+
+    </script>
+
+}

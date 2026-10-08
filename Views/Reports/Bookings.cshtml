@@ -1,0 +1,104 @@
+@model IEnumerable<EventBridge.Models.Booking>
+
+@{
+    ViewData["Title"] = "Booking Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-primary">Booking Lifecycle Report</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Back to Reports</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4 bg-light rounded-4">
+            <form asp-action="Bookings" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control border-start-0 ps-0" placeholder="Search ID, Customer, or Planner..." />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select name="statusFilter" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Upcoming" selected="@(ViewBag.StatusFilter == "Upcoming")">Upcoming</option>
+                        <option value="Confirmed" selected="@(ViewBag.StatusFilter == "Confirmed")">Confirmed</option>
+                        <option value="Completed" selected="@(ViewBag.StatusFilter == "Completed")">Completed</option>
+                        <option value="Cancelled" selected="@(ViewBag.StatusFilter == "Cancelled")">Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary shadow-sm w-100">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Customer</th>
+                            <th>Event Planner</th>
+                            <th>Event Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Booked On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold">#@item.Id</td>
+                                <td>
+                                    <div class="fw-semibold">@item.Quotation?.Enquiry?.Customer?.User?.FullName</div>
+                                    <div class="small text-muted">@item.Quotation?.Enquiry?.Customer?.User?.Email</div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@item.Quotation?.Enquiry?.EventPlanner?.CompanyName</div>
+                                    <div class="small text-muted">@item.Quotation?.Enquiry?.EventPlanner?.User?.Email</div>
+                                </td>
+                                <td>@item.Quotation?.Enquiry?.EventDate.ToString("MMM dd, yyyy")</td>
+                                <td class="fw-semibold text-success">₹@item.TotalAmount.ToString("N2")</td>
+                                <td>
+                                    @if (item.Status == "Upcoming")
+                                    {
+                                        <span class="badge bg-primary text-white">Upcoming</span>
+                                    }
+                                    else if (item.Status == "Confirmed")
+                                    {
+                                        <span class="badge bg-info text-dark">Confirmed</span>
+                                    }
+                                    else if (item.Status == "Completed")
+                                    {
+                                        <span class="badge bg-success">Completed</span>
+                                    }
+                                    else if (item.Status == "Cancelled")
+                                    {
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">@item.BookedAt.ToString("MMM dd, yyyy")</td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">No bookings found matching the criteria.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 p-3 d-flex justify-content-between align-items-center small">
+            <span class="text-muted">Total Records: @Model.Count()</span>
+            <span class="fw-bold text-success fs-6">Total Value: ₹@Model.Sum(b => b.TotalAmount).ToString("N2")</span>
+        </div>
+    </div>
+</div>

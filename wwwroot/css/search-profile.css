@@ -1,0 +1,540 @@
+/* =========================================
+   EVENT PLANNER PROFILE
+   CUSTOMER SIDE
+   ========================================= */
+
+.planner-profile-content {
+    background: #f8f9fb;
+}
+
+
+/* =========================================
+   PAGE HEADER
+   ========================================= */
+
+.planner-profile-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.planner-profile-eyebrow {
+    display: block;
+    color: #52796f;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 7px;
+}
+
+.planner-profile-header h1 {
+    margin: 0 0 7px;
+    color: #252a28;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.planner-profile-header p {
+    margin: 0;
+    color: #7a827f;
+    font-size: 14px;
+}
+
+.planner-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 17px;
+    border: 1px solid #dfe5e2;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #596560;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+    .planner-back-btn:hover {
+        background: #f1f5f3;
+        color: #52796f;
+    }
+
+
+/* =========================================
+   PROFILE GRID
+   ========================================= */
+
+.planner-profile-grid {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+
+/* =========================================
+   PROFILE CARD
+   ========================================= */
+
+.planner-profile-card {
+    background: #ffffff;
+    border: 1px solid #e8ecea;
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    position: sticky;
+    top: 92px;
+}
+
+.planner-profile-image {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 17px;
+}
+
+    .planner-profile-image img,
+    .planner-profile-placeholder {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
+
+    .planner-profile-image img {
+        display: block;
+        object-fit: cover;
+        border: 4px solid #f1f5f3;
+    }
+
+.planner-profile-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f3;
+    color: #52796f;
+    font-size: 42px;
+}
+
+.planner-profile-card h2 {
+    margin: 0 0 10px;
+    color: #303633;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.planner-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: #eaf1ee;
+    color: #52796f;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================
+   PROFILE STATS
+   ========================================= */
+
+.planner-profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 24px 0;
+    padding: 18px 0;
+    border-top: 1px solid #edf0ef;
+    border-bottom: 1px solid #edf0ef;
+}
+
+.planner-stat {
+    min-width: 0;
+}
+
+    .planner-stat + .planner-stat {
+        border-left: 1px solid #edf0ef;
+    }
+
+    .planner-stat strong {
+        display: block;
+        color: #303633;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+        .planner-stat strong i {
+            color: #f0b429;
+            font-size: 14px;
+        }
+
+    .planner-stat span {
+        display: block;
+        color: #858d89;
+        font-size: 10px;
+    }
+
+
+/* =========================================
+   REQUEST BUTTON
+   ========================================= */
+
+.planner-request-btn {
+    width: 100%;
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #52796f;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+    .planner-request-btn:hover {
+        background: #456a61;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+.planner-login-btn {
+    background: #ffffff;
+    color: #52796f;
+    border: 1px solid #52796f;
+}
+
+    .planner-login-btn:hover {
+        background: #f1f5f3;
+        color: #52796f;
+    }
+
+
+/* =========================================
+   MAIN SECTIONS
+   ========================================= */
+
+.planner-profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.planner-section-card {
+    background: #ffffff;
+    border: 1px solid #e8ecea;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.planner-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.planner-section-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f3;
+    color: #52796f;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.planner-section-heading span {
+    display: block;
+    color: #52796f;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    margin-bottom: 3px;
+}
+
+.planner-section-heading h2 {
+    margin: 0;
+    color: #303633;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   ABOUT
+   ========================================= */
+
+.planner-description {
+    margin: 0;
+    color: #68716d;
+    font-size: 14px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+.planner-empty-text {
+    margin: 0;
+    color: #858d89;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   PORTFOLIO
+   ========================================= */
+
+.planner-portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.planner-portfolio-item {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 11px;
+    background: #f1f5f3;
+}
+
+    .planner-portfolio-item img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.25s ease;
+    }
+
+    .planner-portfolio-item:hover img {
+        transform: scale(1.04);
+    }
+
+.planner-portfolio-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 9px 10px;
+    background: rgba(32, 36, 42, 0.78);
+    color: #ffffff;
+    font-size: 11px;
+}
+
+
+/* =========================================
+   REVIEWS
+   ========================================= */
+
+.planner-reviews {
+    display: flex;
+    flex-direction: column;
+}
+
+.planner-review {
+    display: flex;
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid #edf0ef;
+}
+
+    .planner-review:first-child {
+        padding-top: 0;
+        border-top: none;
+    }
+
+.planner-review-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #f1f5f3;
+    color: #52796f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.planner-review-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.planner-review-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 7px;
+}
+
+    .planner-review-top strong {
+        display: block;
+        color: #343a40;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .planner-review-top span {
+        display: block;
+        color: #909895;
+        font-size: 10px;
+        margin-top: 3px;
+    }
+
+.planner-review-stars {
+    display: flex;
+    gap: 3px;
+    color: #f0b429;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.planner-review-content p {
+    margin: 0;
+    color: #68716d;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+.planner-empty-state {
+    text-align: center;
+    padding: 25px 10px 5px;
+}
+
+.planner-empty-icon {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 11px;
+    border-radius: 50%;
+    background: #f1f5f3;
+    color: #52796f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.planner-empty-state h3 {
+    margin: 0 0 5px;
+    color: #343a40;
+    font-size: 15px;
+}
+
+.planner-empty-state p {
+    margin: 0;
+    color: #858d89;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1000px) {
+
+    .planner-profile-grid {
+        grid-template-columns: 240px minmax(0, 1fr);
+    }
+
+    .planner-portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .planner-profile-content {
+        padding: 24px 18px;
+    }
+
+    .planner-profile-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+        .planner-profile-header h1 {
+            font-size: 27px;
+        }
+
+    .planner-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-profile-card {
+        position: static;
+    }
+
+    .planner-profile-main {
+        gap: 18px;
+    }
+
+    .planner-section-card {
+        padding: 20px;
+    }
+
+    .planner-portfolio-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .planner-profile-header {
+        margin-bottom: 22px;
+    }
+
+        .planner-profile-header h1 {
+            font-size: 24px;
+        }
+
+    .planner-back-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .planner-profile-card {
+        padding: 20px;
+    }
+
+    .planner-section-card {
+        padding: 18px;
+    }
+
+    .planner-section-heading h2 {
+        font-size: 18px;
+    }
+
+    .planner-portfolio-grid {
+        gap: 9px;
+    }
+
+    .planner-review {
+        gap: 10px;
+    }
+
+    .planner-review-top {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

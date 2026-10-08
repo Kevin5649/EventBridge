@@ -1,0 +1,132 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Check Your Email";
+    Layout = "_LandingLayout";
+}
+
+<div class="forgot-password-page">
+
+    <div class="forgot-password-card">
+
+        <div class="forgot-password-icon">
+            <i class="fa-solid fa-envelope-circle-check"></i>
+        </div>
+
+        <div class="forgot-password-heading">
+
+            <h1>Check Your Email</h1>
+
+            <p>
+                We've sent a verification link to your email address.
+                Please click <strong>Verify Email</strong> to activate
+                your EventBridge account.
+            </p>
+
+            <p class="text-muted small mt-3">
+                You won't be able to log in until your email has been verified.
+            </p>
+
+        </div>
+
+
+        <!-- RESEND SECTION -->
+
+        <div class="text-center mt-4">
+
+            <p class="text-muted mb-2">
+                Didn't receive the email?
+            </p>
+
+            <button id="resendButton"
+                    type="button"
+                    class="btn forgot-submit-btn w-100"
+                    disabled>
+
+                <i class="fa-solid fa-rotate-right me-2"></i>
+
+                Resend available in
+                <span id="countdown">60</span>s
+
+            </button>
+
+        </div>
+
+
+        <!-- RESEND FORM -->
+
+        <form id="resendForm"
+              asp-action="ResendVerificationEmail"
+              asp-controller="Account"
+              method="post"
+              style="display:none;">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="email"
+                   id="resendEmail" />
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        let remainingSeconds = 60;
+
+        const countdown =
+            document.getElementById("countdown");
+
+        const resendButton =
+            document.getElementById("resendButton");
+
+        const resendForm =
+            document.getElementById("resendForm");
+
+        const resendEmail =
+            document.getElementById("resendEmail");
+
+
+        // Get email used during registration
+        resendEmail.value = "@Model";
+
+        const timer = setInterval(function () {
+
+            remainingSeconds--;
+
+            countdown.textContent =
+                remainingSeconds;
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(timer);
+
+                resendButton.disabled = false;
+
+                resendButton.innerHTML =
+                    '<i class="fa-solid fa-rotate-right me-2"></i>' +
+                    'Resend Verification Email';
+            }
+
+        }, 1000);
+
+
+        resendButton.addEventListener("click", function () {
+
+            if (!resendButton.disabled) {
+
+                resendForm.submit();
+
+            }
+
+        });
+
+    </script>
+
+}

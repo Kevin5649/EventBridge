@@ -1,0 +1,237 @@
+@{
+    Layout = "_LandingLayout";
+    ViewData["Title"] = "Home";
+}
+
+<div class="landing-page">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+
+        <!-- Replace this image with your event-neutral image -->
+        <img src="~/images/event-hero.jpg"
+             class="hero-image"
+             alt="Event celebration">
+
+        <div class="hero-image-overlay"></div>
+
+        <div class="container hero-content">
+
+            <div class="hero-text-area">
+
+                <h1 class="hero-title">
+                    Plan Your Event.
+                    <br />
+                    <span>Make It Memorable.</span>
+                </h1>
+
+                <p class="hero-description">
+                    EventBridge connects customers with event planners
+                    to make finding, communicating and booking the right
+                    planner simple and convenient.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+
+                    
+
+                    <div class="dropdown">
+
+                        <button class="btn btn-hero-primary"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+
+                            Get Started
+
+                        </button>
+
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-controller="Account"
+                                   asp-action="RegisterCustomer">
+
+                                    Register as Customer
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item"
+                                   asp-controller="Account"
+                                   asp-action="RegisterPlanner">
+
+                                    Register as Event Planner
+
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn btn-hero-secondary">
+                        Login
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT PREVIEW -->
+    <section class="about-preview">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+
+                <div class="section-label mb-3">
+                    EventBridge
+                </div>
+
+                <h2 class="section-title">
+                    A Simpler Way to Plan Your Event
+                </h2>
+
+                <p class="section-description mt-3">
+                    EventBridge brings customers and event planners together
+                    on one platform. Customers can share their requirements,
+                    receive quotations and choose a suitable planner, while
+                    event planners can respond to enquiries and manage their
+                    bookings.
+                </p>
+
+            </div>
+
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+
+                        <h5>Find the Right Planner</h5>
+
+                        <p>
+                            Discover event planners based on your
+                            requirements and event type.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+
+                        <h5>Send Your Enquiry</h5>
+
+                        <p>
+                            Share your event requirements directly
+                            with a suitable planner.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+
+                        <h5>Receive Quotations</h5>
+
+                        <p>
+                            Receive and compare quotations from
+                            event planners.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="feature-card">
+
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+
+                        <h5>Book Your Planner</h5>
+
+                        <p>
+                            Choose the planner that best suits
+                            your event requirements.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LOWER INFORMATION SECTION -->
+    <section class="info-section">
+
+        <div class="container">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6">
+
+                    <h2>
+                        Bringing Event Planning Together
+                    </h2>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <p class="mb-0">
+                        Whether you are organizing a wedding, birthday,
+                        corporate gathering or another special occasion,
+                        EventBridge provides a convenient way to connect
+                        with event planners and manage the journey from
+                        enquiry to booking.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>

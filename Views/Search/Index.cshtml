@@ -1,0 +1,389 @@
+@model EventBridge.ViewModels.PlannerSearchViewModel
+
+@{
+    ViewData["Title"] = "Find Planners";
+}
+
+<div class="customer-dashboard">
+
+    <!-- CUSTOMER SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+
+    <!-- SEARCH PAGE CONTENT -->
+    <section class="customer-dashboard-content">
+
+        <div class="planner-search-page">
+
+            <!-- PAGE INTRO -->
+            <section class="planner-search-hero">
+
+                <div>
+                    <span class="planner-eyebrow">
+                        EXPLORE EVENT PLANNERS
+                    </span>
+
+                    <h1>
+                        Find the right planner<br />
+                        for your event.
+                    </h1>
+
+                    <p>
+                        Discover trusted event planners, compare their experience
+                        and ratings, and find someone who fits your requirements.
+                    </p>
+                </div>
+
+            </section>
+
+
+            <!-- SEARCH AREA -->
+            <section class="planner-search-panel">
+
+                <div class="planner-search-heading">
+
+                    <div>
+                        <span>SEARCH</span>
+
+                        <h2>
+                            What are you looking for?
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <form method="get" asp-action="Index">
+
+                    <div class="planner-filter-grid">
+
+                        <div class="planner-filter">
+
+                            <label asp-for="CompanyName">
+                                Planner / Company
+                            </label>
+
+                            <div class="planner-input">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                                <input asp-for="CompanyName"
+                                       placeholder="Wedding planner, DJ..." />
+
+                            </div>
+
+                        </div>
+
+                        <div class="planner-filter">
+
+                            <label asp-for="CategoryId">
+                                Event Category
+                            </label>
+
+                            <div class="planner-input">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <select asp-for="CategoryId">
+
+                                    <option value="">
+                                        All Categories
+                                    </option>
+
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.Id">
+                                            @category.Name
+                                        </option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="planner-filter">
+
+                            <label asp-for="MinExperience">
+                                Minimum Experience
+                            </label>
+
+                            <div class="planner-input">
+
+                                <i class="fa-solid fa-briefcase"></i>
+
+                                <input asp-for="MinExperience"
+                                       type="number"
+                                       min="0"
+                                       placeholder="Years" />
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="planner-filter">
+
+                            <label asp-for="MinRating">
+                                Minimum Rating
+                            </label>
+
+                            <div class="planner-input">
+
+                                <i class="fa-solid fa-star"></i>
+
+                                <select asp-for="MinRating">
+
+                                    <option value="">Any rating</option>
+                                    <option value="4">4+ Stars</option>
+                                    <option value="3">3+ Stars</option>
+                                    <option value="2">2+ Stars</option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="planner-filter planner-verified">
+
+                            <label class="planner-check">
+
+                                <input asp-for="OnlyVerified" />
+
+                                <span class="planner-check-box">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+
+                                <span>
+                                    <strong>Verified planners</strong>
+                                    <small>Show trusted planners only</small>
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="planner-search-button">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            Search planners
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- RESULTS -->
+            <section class="planner-results-section">
+
+                <div class="planner-results-heading">
+
+                    <div>
+
+                        <span>PLANNERS</span>
+
+                        <h2>
+                            Discover your options
+                        </h2>
+
+                    </div>
+
+
+                    @if (Model.Planners != null && Model.Planners.Any())
+                    {
+                        <span class="planner-result-count">
+                            @Model.Planners.Count() planner(s) found
+                        </span>
+                    }
+
+                </div>
+
+
+                @if (Model.Planners != null && Model.Planners.Any())
+                {
+
+                    <div class="planner-results-grid">
+
+                        @foreach (var planner in Model.Planners)
+                        {
+
+                            <article class="planner-result-card">
+
+                                <!-- PLANNER HEADER -->
+                                <div class="planner-card-top">
+
+                                    @if (!string.IsNullOrEmpty(
+                                   planner.User?.ProfilePicturePath))
+                                    {
+
+                                        <img src="@planner.User.ProfilePicturePath"
+                                             class="planner-profile-image"
+                                             alt="Planner profile picture" />
+
+                                    }
+                                    else
+                                    {
+
+                                        <div class="planner-profile-placeholder">
+
+                                            <i class="fa-regular fa-user"></i>
+
+                                        </div>
+
+                                    }
+
+
+                                    <div class="planner-card-title">
+
+                                        <h3>
+                                            @planner.CompanyName
+                                        </h3>
+
+
+                                        @if (planner.IsVerified)
+                                        {
+
+                                            <span class="planner-verified-badge">
+
+                                                <i class="fa-solid fa-circle-check"></i>
+
+                                                Verified
+
+                                            </span>
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- PLANNER INFORMATION -->
+                                <div class="planner-card-body">
+
+                                    <div class="planner-meta">
+
+                                        <span>
+
+                                            <i class="fa-solid fa-star"></i>
+
+                                            @planner.AvgRating.ToString("0.0")
+
+                                            <small>
+                                                (@planner.ReviewCount)
+                                            </small>
+
+                                        </span>
+
+
+                                        <span>
+
+                                            <i class="fa-solid fa-briefcase"></i>
+
+                                            @planner.Experience years
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <p class="planner-description">
+
+                                        @(string.IsNullOrWhiteSpace(
+                                            planner.Description)
+
+                                            ? "This planner has not added a description yet."
+
+                                            : planner.Description)
+
+                                    </p>
+
+                                </div>
+
+
+                                <!-- ACTION -->
+                                <div class="planner-card-footer">
+
+                                    <a asp-action="Profile"
+                                       asp-route-id="@planner.PlannerId"
+                                       class="planner-profile-button">
+
+                                        View planner
+
+                                        <i class="fa-solid fa-arrow-right"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+                        }
+
+                    </div>
+
+                }
+                else
+                {
+
+                    <div class="planner-no-results">
+
+                        <div class="planner-no-results-icon">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+
+                        <h3>
+                            No planners found
+                        </h3>
+
+
+                        <p>
+                            Try changing your filters or search terms
+                            to discover more event planners.
+                        </p>
+
+
+                        <a asp-action="Index">
+                            Clear search
+                        </a>
+
+                    </div>
+
+                }
+
+            </section>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/planner-search.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}

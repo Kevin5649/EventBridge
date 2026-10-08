@@ -1,0 +1,179 @@
+@model IEnumerable<EventBridge.ViewModels.CategoryReportViewModel>
+
+@{
+    ViewData["Title"] = "Category Report";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold mb-0 text-primary">
+            Event Categories Overview
+        </h2>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary rounded-pill px-4">
+
+            Back to Reports
+
+        </a>
+
+    </div>
+
+
+    <!-- CATEGORY CARDS -->
+    <div class="row g-4 mb-4">
+
+        @foreach (var category in Model)
+        {
+            string icon = "bi-tags";
+
+            var categoryName =
+            category.CategoryName.ToLower();
+
+            if (categoryName.Contains("wedding") ||
+            categoryName.Contains("engagement"))
+            {
+                icon = "bi-heart";
+            }
+            else if (categoryName.Contains("birthday"))
+            {
+                icon = "bi-balloon";
+            }
+            else if (categoryName.Contains("corporate") ||
+            categoryName.Contains("business"))
+            {
+                icon = "bi-briefcase";
+            }
+            else if (categoryName.Contains("party"))
+            {
+                icon = "bi-stars";
+            }
+            else if (categoryName.Contains("conference") ||
+            categoryName.Contains("seminar"))
+            {
+                icon = "bi-easel";
+            }
+            else if (categoryName.Contains("concert") ||
+            categoryName.Contains("music"))
+            {
+                icon = "bi-music-note-beamed";
+            }
+            else if (categoryName.Contains("festival"))
+            {
+                icon = "bi-calendar-event";
+            }
+
+            <div class="col-md-3">
+
+                <div class="card shadow-sm border-0 h-100 rounded-4 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="rounded-circle bg-light text-primary
+                                    d-inline-flex align-items-center
+                                    justify-content-center mb-3
+                                    border border-2 border-primary"
+                             style="width: 80px; height: 80px;">
+
+                            <i class="bi @icon display-5"></i>
+
+                        </div>
+
+
+                        <h4 class="fw-bold mb-2">
+                            @category.CategoryName
+                        </h4>
+
+
+                        <p class="text-muted mb-0">
+
+                            <strong>
+                                @category.PlannerCount
+                            </strong>
+
+                            @(category.PlannerCount == 1
+                                ? "Planner"
+                                : "Planners")
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+
+    <!-- CATEGORY TABLE -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light text-muted">
+
+                        <tr>
+
+                            <th class="ps-4">
+                                Category Name
+                            </th>
+
+                            <th>
+                                Number of Planners
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td class="ps-4 fw-bold">
+
+                                    @item.CategoryName
+
+                                </td>
+
+
+                                <td>
+
+                                    @item.PlannerCount
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-footer bg-white border-0 p-3 text-muted small text-end">
+
+            Total Categories:
+            @Model.Count()
+
+        </div>
+
+    </div>
+
+</div>

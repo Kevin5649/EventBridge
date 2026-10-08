@@ -1,0 +1,112 @@
+@model IEnumerable<EventBridge.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payment Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-primary">Transaction History</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Back to Reports</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-white-50 text-uppercase fw-bold mb-1">Total Revenue Captured</h6>
+                    <h3 class="display-6 fw-bold mb-0">₹@Model.Where(p => p.Status == "Success").Sum(p => p.Amount).ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h6 class="text-dark-50 text-uppercase fw-bold mb-1">Total Successful Txns</h6>
+                    <h3 class="display-6 fw-bold mb-0">@Model.Count(p => p.Status == "Success")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4 bg-light rounded-4">
+            <form asp-action="Payments" method="get" class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control border-start-0 ps-0" placeholder="Search by Transaction ID or Booking ID..." />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary shadow-sm w-100">Search</button>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Payments" class="btn btn-outline-secondary w-100">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-muted">
+                        <tr>
+                            <th class="ps-4">Txn ID</th>
+                            <th>Booking ID</th>
+                            <th>Customer</th>
+                            <th>Planner</th>
+                            <th>Payment Method</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold font-monospace">@item.TransactionId</td>
+                                <td><a asp-controller="Booking" asp-action="Details" asp-route-id="@item.BookingId" class="text-decoration-none">#@item.BookingId</a></td>
+                                <td>
+                                    @item.Booking?.Quotation?.Enquiry?.Customer?.User?.FullName
+                                </td>
+
+                                <td>
+                                    @item.Booking?.Quotation?.Enquiry?.EventPlanner?.CompanyName
+                                </td>
+
+                                <td>
+                                    @item.PaymentMethod
+                                </td>
+
+                                <td class="fw-bold">
+                                    ₹@item.Amount.ToString("N2")
+                                </td>
+                                <td>
+                                    @if (item.Status == "Success")
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Success</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> @item.Status</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4 text-muted">@item.PaymentDate.ToString("MMM dd, yyyy HH:mm")</td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">No transactions found matching the criteria.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

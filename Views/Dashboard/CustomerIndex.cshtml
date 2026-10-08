@@ -1,0 +1,328 @@
+@model EventBridge.ViewModels.CustomerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Customer Dashboard";
+}
+
+<div class="customer-dashboard">
+
+    <!-- ================= CUSTOMER SIDEBAR ================= -->
+    @await Html.PartialAsync("_UserSidebar")
+
+    <!-- ================= DASHBOARD CONTENT ================= -->
+
+    <section class="customer-dashboard-content">
+
+        <!-- Welcome -->
+
+        <div class="customer-welcome">
+
+            <div>
+                <span class="customer-eyebrow">YOUR EVENT SPACE</span>
+
+                <h1>
+                    Welcome back!
+                </h1>
+
+                <p>
+                    Manage your events, enquiries and bookings from one place.
+                </p>
+            </div>
+
+            <a asp-controller="Search"
+               asp-action="Index"
+               class="customer-find-btn">
+
+                <i class="fa-solid fa-plus"></i>
+                Find a Planner
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <div class="customer-summary">
+
+            <div class="customer-summary-card">
+
+                <div class="customer-summary-icon enquiry-icon">
+                    <i class="fa-regular fa-paper-plane"></i>
+                </div>
+
+                <div>
+                    <span>Enquiries</span>
+                    <strong>@Model.TotalEnquiries</strong>
+                </div>
+
+            </div>
+
+
+            <div class="customer-summary-card">
+
+                <div class="customer-summary-icon booking-icon">
+                    <i class="fa-regular fa-calendar-check"></i>
+                </div>
+
+                <div>
+                    <span>Active Bookings</span>
+                    <strong>@Model.ActiveBookings</strong>
+                </div>
+
+            </div>
+
+
+            <div class="customer-summary-card">
+
+                <div class="customer-summary-icon payment-icon">
+                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                </div>
+
+                <div>
+                    <span>Total Payments</span>
+                    <strong>₹@Model.TotalPayments.ToString("N0")</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= MAIN DASHBOARD ================= -->
+
+        <div class="customer-main-grid">
+
+            <!-- Recent Activity -->
+
+            <div class="customer-activity-card">
+
+                <div class="customer-section-heading">
+
+                    <div>
+                        <span>RECENT</span>
+                        <h2>Your activity</h2>
+                    </div>
+
+                    <a asp-controller="Booking"
+                       asp-action="Index">
+                        View all
+                    </a>
+
+                </div>
+
+
+                <div class="customer-booking-list">
+
+                    @if (Model.RecentBookings.Any())
+                    {
+                        foreach (var booking in Model.RecentBookings)
+                        {
+                            <div class="customer-booking-item">
+
+                                <div class="booking-date">
+                                    <span>
+                                        @booking.Quotation?.Enquiry?.EventDate.ToString("MMM")
+                                    </span>
+
+                                    <strong>
+                                        @booking.Quotation?.Enquiry?.EventDate.ToString("dd")
+                                    </strong>
+                                </div>
+
+
+                                <div class="booking-info">
+
+                                    <strong>
+                                        @(booking.Quotation?.Enquiry?.EventPlanner?.CompanyName
+                                            ?? "Event Planner")
+                                    </strong>
+
+                                    <span>
+                                        Booking #@booking.Id
+                                    </span>
+
+                                </div>
+
+
+                                <div class="booking-status">
+
+                                    @if (booking.Status == "Upcoming")
+                                    {
+                                        <span class="status upcoming">
+                                            Upcoming
+                                        </span>
+                                    }
+                                    else if (booking.Status == "Confirmed")
+                                    {
+                                        <span class="status confirmed">
+                                            Confirmed
+                                        </span>
+                                    }
+                                    else if (booking.Status == "Completed")
+                                    {
+                                        <span class="status completed">
+                                            Completed
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status">
+                                            @booking.Status
+                                        </span>
+                                    }
+
+                                </div>
+
+
+                                <a asp-controller="Booking"
+                                   asp-action="Details"
+                                   asp-route-id="@booking.Id"
+                                   class="booking-arrow">
+
+                                    <i class="fa-solid fa-arrow-right"></i>
+
+                                </a>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="customer-empty-state">
+
+                            <div>
+                                <i class="fa-regular fa-calendar-xmark"></i>
+                            </div>
+
+                            <h3>No bookings yet</h3>
+
+                            <p>
+                                Find an event planner and start planning your next event.
+                            </p>
+
+                            <a asp-controller="Search"
+                               asp-action="Index">
+
+                                Explore Planners
+
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Actions -->
+
+            <div class="customer-actions-card">
+
+                <div class="customer-section-heading">
+
+                    <div>
+                        <span>QUICK ACCESS</span>
+                        <h2>What do you need?</h2>
+                    </div>
+
+                </div>
+
+
+                <a asp-controller="Search"
+                   asp-action="Index"
+                   class="customer-action-item">
+
+                    <div class="action-icon">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+
+                    <div>
+                        <strong>Find a planner</strong>
+                        <span>Explore event planners</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+
+                <a asp-controller="Enquiry"
+                   asp-action="Index"
+                   class="customer-action-item">
+
+                    <div class="action-icon">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </div>
+
+                    <div>
+                        <strong>My enquiries</strong>
+                        <span>Check planner responses</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+
+                <a asp-controller="Profile"
+                   asp-action="Index"
+                   class="customer-action-item">
+
+                    <div class="action-icon">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+
+                    <div>
+                        <strong>My profile</strong>
+                        <span>Update your information</span>
+                    </div>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}
+
+@* @section Scripts { *@
+
+@*     <script> *@
+@*         document.addEventListener("DOMContentLoaded", function () { *@
+
+@*             const sidebar = document.getElementById("customerSidebar"); *@
+
+@*             const toggle = document.getElementById("sidebarToggle"); *@
+
+@*             if (sidebar && toggle) { *@
+
+@*                 toggle.addEventListener("click", function () { *@
+
+@*                     sidebar.classList.toggle("collapsed"); *@
+
+@*                 }); *@
+
+@*             } *@
+
+@*         }); *@
+@*     </script> *@
+
+@* } *@

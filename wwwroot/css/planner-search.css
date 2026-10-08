@@ -1,0 +1,528 @@
+/* =========================================================
+   PLANNER SEARCH PAGE
+   ========================================================= */
+
+.planner-search-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 45px 25px 70px;
+    color: #263238;
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.planner-search-hero {
+    padding: 15px 5px 38px;
+}
+
+.planner-eyebrow,
+.planner-search-heading span,
+.planner-results-heading span {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #12615c;
+    margin-bottom: 10px;
+}
+
+.planner-search-hero h1 {
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.08;
+    font-weight: 700;
+    margin: 0 0 18px;
+    letter-spacing: -1.5px;
+}
+
+.planner-search-hero p {
+    max-width: 650px;
+    color: #607d8b;
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+
+/* =========================================================
+   SEARCH PANEL
+   ========================================================= */
+
+.planner-search-panel {
+    background: #ffffff;
+    border: 1px solid #e8eeee;
+    border-radius: 24px;
+    padding: 30px;
+    margin-bottom: 55px;
+    box-shadow: 0 12px 35px rgba(38, 50, 56, 0.06);
+}
+
+.planner-search-heading {
+    margin-bottom: 25px;
+}
+
+    .planner-search-heading h2,
+    .planner-results-heading h2 {
+        font-size: 25px;
+        font-weight: 700;
+        margin: 0;
+        color: #263238;
+    }
+
+
+/* =========================================================
+   FILTER GRID
+   ========================================================= */
+
+.planner-filter-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 18px;
+    align-items: end;
+}
+
+.planner-filter {
+    min-width: 0;
+}
+
+    .planner-filter label:not(.planner-check) {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #455a64;
+        margin-bottom: 8px;
+    }
+
+.planner-input {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 15px;
+    background: #f5f8f7;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    transition: all 0.2s ease;
+}
+
+    .planner-input i {
+        color: #78909c;
+        font-size: 14px;
+    }
+
+    .planner-input input,
+    .planner-input select {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #263238;
+        font-size: 14px;
+    }
+
+        .planner-input input::placeholder {
+            color: #90a4ae;
+        }
+
+    .planner-input:focus-within {
+        background: #ffffff;
+        border-color: #12615c;
+        box-shadow: 0 0 0 3px rgba(18, 97, 92, 0.08);
+    }
+
+
+/* =========================================================
+   VERIFIED CHECKBOX
+   ========================================================= */
+
+.planner-verified {
+    height: 50px;
+}
+
+.planner-check {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    cursor: pointer;
+}
+
+    .planner-check input {
+        display: none;
+    }
+
+.planner-check-box {
+    width: 21px;
+    height: 21px;
+    border: 1.5px solid #b0bec5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    flex-shrink: 0;
+    transition: 0.2s ease;
+}
+
+.planner-check input:checked + .planner-check-box {
+    background: #12615c;
+    border-color: #12615c;
+}
+
+.planner-check > span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.planner-check strong {
+    font-size: 13px;
+    color: #37474f;
+}
+
+.planner-check small {
+    color: #90a4ae;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   SEARCH BUTTON
+   ========================================================= */
+
+.planner-search-button {
+    grid-column: 1 / -1;
+    justify-self: end;
+    min-width: 190px;
+    height: 50px;
+    border: 0;
+    border-radius: 14px;
+    background: #12615c;
+    color: white;
+    padding: 0 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+    .planner-search-button i {
+        margin-right: 8px;
+    }
+
+    .planner-search-button:hover {
+        background: #0e514d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(18, 97, 92, 0.18);
+    }
+
+
+/* =========================================================
+   RESULTS HEADER
+   ========================================================= */
+
+.planner-results-section {
+    margin-top: 10px;
+}
+
+.planner-results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 25px;
+}
+
+.planner-result-count {
+    color: #78909c !important;
+    font-size: 13px !important;
+    letter-spacing: 0 !important;
+    margin-bottom: 3px !important;
+}
+
+
+/* =========================================================
+   PLANNER GRID
+   ========================================================= */
+
+.planner-results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+
+/* =========================================================
+   PLANNER CARD
+   ========================================================= */
+
+.planner-result-card {
+    background: #ffffff;
+    border: 1px solid #e8eeee;
+    border-radius: 22px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 345px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+    .planner-result-card:hover {
+        transform: translateY(-6px);
+        border-color: #d6e5e2;
+        box-shadow: 0 18px 38px rgba(38, 50, 56, 0.10);
+    }
+
+
+/* =========================================================
+   CARD TOP
+   ========================================================= */
+
+.planner-card-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 24px 23px;
+    background: #f3f7f6;
+}
+
+.planner-profile-image,
+.planner-profile-placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    flex-shrink: 0;
+}
+
+.planner-profile-image {
+    object-fit: cover;
+}
+
+.planner-profile-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #12615c;
+    font-size: 25px;
+}
+
+.planner-card-title {
+    min-width: 0;
+}
+
+    .planner-card-title h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 7px;
+        color: #263238;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+.planner-verified-badge {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    color: #12615c !important;
+    font-size: 11px !important;
+    letter-spacing: 0 !important;
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   CARD BODY
+   ========================================================= */
+
+.planner-card-body {
+    padding: 22px 23px 15px;
+    flex: 1;
+}
+
+.planner-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 17px;
+}
+
+    .planner-meta span {
+        color: #455a64;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+        .planner-meta span:first-child {
+            color: #d28b00;
+        }
+
+    .planner-meta i {
+        margin-right: 5px;
+    }
+
+    .planner-meta small {
+        color: #90a4ae;
+        font-weight: 400;
+    }
+
+.planner-description {
+    color: #78909c;
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.planner-card-footer {
+    padding: 0 23px 23px;
+}
+
+.planner-profile-button {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #12615c;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #12615c;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .planner-profile-button i {
+        transition: transform 0.2s ease;
+    }
+
+    .planner-profile-button:hover {
+        background: #12615c;
+        color: #ffffff;
+    }
+
+        .planner-profile-button:hover i {
+            transform: translateX(4px);
+        }
+
+
+/* =========================================================
+   NO RESULTS
+   ========================================================= */
+
+.planner-no-results {
+    text-align: center;
+    padding: 70px 20px;
+    background: #f7faf9;
+    border-radius: 24px;
+    border: 1px dashed #d5e1df;
+}
+
+.planner-no-results-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8f1ef;
+    color: #12615c;
+    font-size: 22px;
+}
+
+.planner-no-results h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.planner-no-results p {
+    color: #78909c;
+    margin-bottom: 20px;
+}
+
+.planner-no-results a {
+    color: #12615c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .planner-no-results a:hover {
+        text-decoration: underline;
+    }
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .planner-results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .planner-filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .planner-search-button {
+        grid-column: auto;
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .planner-search-page {
+        padding: 30px 16px 50px;
+    }
+
+    .planner-search-hero {
+        padding-bottom: 30px;
+    }
+
+        .planner-search-hero h1 {
+            font-size: 38px;
+        }
+
+    .planner-search-panel {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    .planner-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-search-button {
+        grid-column: 1;
+    }
+
+    .planner-results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-results-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+

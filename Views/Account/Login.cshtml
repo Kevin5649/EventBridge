@@ -1,0 +1,166 @@
+@model EventBridge.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "_LandingLayout";
+}
+
+<div class="login-page">
+
+    <div class="login-container">
+
+        <!-- LEFT SIDE - EVENT IMAGE -->
+        <div class="login-image-section">
+
+            <img src="~/images/event-hero.jpg"
+                 alt="Event celebration"
+                 class="login-image" />
+
+            <div class="login-image-overlay">
+                <h2>Plan Your Event.</h2>
+                <p>
+                    Connect with trusted event planners and make
+                    your next event memorable.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE - LOGIN FORM -->
+        <div class="login-form-section">
+
+            <div class="login-card">
+
+                <div class="login-heading">
+
+                    <h1>Welcome Back</h1>
+
+                    <p>
+                        Log in to continue to EventBridge
+                    </p>
+
+                </div>
+
+
+                <form asp-action="Login"
+                      asp-controller="Account"
+                      method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-3">
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="login-field">
+
+                        <label asp-for="Email">
+                            Email address
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control"
+                               autocomplete="username"
+                               aria-required="true"
+                               placeholder="name@example.com" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="login-field">
+
+                        <div class="password-label-row">
+
+                            <label asp-for="Password">
+                                Password
+                            </label>
+
+                            <a asp-action="ForgotPassword"
+                               class="forgot-link">
+                                Forgot password?
+                            </a>
+
+                        </div>
+
+                        <input asp-for="Password"
+                               class="form-control"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="Enter your password" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- REMEMBER ME -->
+                    <div class="form-check login-remember mb-4">
+
+                        <input class="form-check-input"
+                               asp-for="RememberMe" />
+
+                        <label class="form-check-label"
+                               asp-for="RememberMe">
+                            Remember me
+                        </label>
+
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+                    <button id="login-submit"
+                            type="submit"
+                            class="btn login-submit-btn w-100">
+
+                        Log in
+
+                    </button>
+
+
+                    <!-- REGISTER -->
+                    <div class="login-register">
+
+                        <p>
+                            Don't have an account?
+                        </p>
+
+                        <div class="register-options">
+
+                            <a asp-action="RegisterCustomer">
+                                Register as Customer
+                            </a>
+
+                            <span>or</span>
+
+                            <a asp-action="RegisterPlanner">
+                                Become an Event Planner
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

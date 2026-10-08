@@ -1,0 +1,409 @@
+@model EventBridge.ViewModels.ReviewCreateViewModel
+
+@{
+    ViewData["Title"] = "Write a Review";
+}
+
+<link rel="stylesheet" href="~/css/customer-dashboard.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/customer-sidebar.css" asp-append-version="true" />
+
+<div class="customer-dashboard">
+
+    <!-- CUSTOMER SIDEBAR -->
+    @await Html.PartialAsync("_UserSidebar")
+
+    <!-- MAIN CONTENT -->
+    <main class="customer-dashboard-content review-create-content">
+
+        <!-- HEADER -->
+        <div class="review-page-header">
+
+            <div>
+                <span class="review-eyebrow">
+                    <i class="fa-regular fa-star"></i>
+                    YOUR EXPERIENCE
+                </span>
+
+                <h1>Write a Review</h1>
+
+                <p>
+                    Share your experience and help other customers choose
+                    the right event planner.
+                </p>
+            </div>
+
+            <a asp-controller="Booking"
+               asp-action="Details"
+               asp-route-id="@Model.BookingId"
+               class="review-back-btn">
+
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Booking
+
+            </a>
+
+        </div>
+
+
+        <!-- REVIEW CARD -->
+        <div class="review-create-card">
+
+            <div class="review-card-header">
+
+                <div class="review-card-icon">
+                    <i class="fa-regular fa-star"></i>
+                </div>
+
+                <div>
+                    <h3>Rate Your Experience</h3>
+
+                    <p>
+                        Your feedback helps us improve EventBridge
+                        and helps other customers make better decisions.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="review-form-container">
+
+                <form asp-action="Create" method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-4">
+                    </div>
+
+                    <input type="hidden" asp-for="BookingId" />
+
+
+                    <!-- RATING -->
+                    <div class="review-rating-section">
+
+                        <label class="review-form-label">
+                            Overall Rating
+                        </label>
+
+                        <p class="review-rating-help">
+                            How would you rate your experience with this planner?
+                        </p>
+
+
+                        <div class="review-stars"
+                             id="rating-container">
+
+                            <input type="radio"
+                                   asp-for="Rating"
+                                   value="5"
+                                   id="star5" />
+
+                            <label for="star5"
+                                   title="5 stars">
+                                <i class="fa-solid fa-star"></i>
+                            </label>
+
+
+                            <input type="radio"
+                                   asp-for="Rating"
+                                   value="4"
+                                   id="star4" />
+
+                            <label for="star4"
+                                   title="4 stars">
+                                <i class="fa-solid fa-star"></i>
+                            </label>
+
+
+                            <input type="radio"
+                                   asp-for="Rating"
+                                   value="3"
+                                   id="star3" />
+
+                            <label for="star3"
+                                   title="3 stars">
+                                <i class="fa-solid fa-star"></i>
+                            </label>
+
+
+                            <input type="radio"
+                                   asp-for="Rating"
+                                   value="2"
+                                   id="star2" />
+
+                            <label for="star2"
+                                   title="2 stars">
+                                <i class="fa-solid fa-star"></i>
+                            </label>
+
+
+                            <input type="radio"
+                                   asp-for="Rating"
+                                   value="1"
+                                   id="star1"
+                                   required />
+
+                            <label for="star1"
+                                   title="1 star">
+                                <i class="fa-solid fa-star"></i>
+                            </label>
+
+                        </div>
+
+                        <span asp-validation-for="Rating"
+                              class="text-danger small d-block mt-2">
+                        </span>
+
+                        <div id="rating-text"
+                             class="review-rating-text">
+                            Select a rating
+                        </div>
+
+                    </div>
+
+
+                    <!-- COMMENT -->
+                    <div class="review-form-group">
+
+                        <label asp-for="Comment"
+                               class="review-form-label">
+
+                            <i class="fa-regular fa-message"></i>
+                            Your Review
+
+                        </label>
+
+                        <textarea asp-for="Comment"
+                                  class="review-form-control review-comment"
+                                  rows="7"
+                                  maxlength="2000"
+                                  placeholder="Share details of your experience with the planner..."
+                                  required></textarea>
+
+                        <span asp-validation-for="Comment"
+                              class="text-danger small">
+                        </span>
+
+                        <small>
+                            Tell other customers about the service,
+                            communication, quality and overall experience.
+                        </small>
+
+                    </div>
+
+
+                    <!-- INFO -->
+                    <div class="review-info-box">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <div>
+
+                            <strong>Your review matters</strong>
+
+                            <p>
+                                Honest reviews help other customers find
+                                trusted event planners on EventBridge.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+                    <div class="review-form-actions">
+
+                        <a asp-controller="Booking"
+                           asp-action="Details"
+                           asp-route-id="@Model.BookingId"
+                           class="review-cancel-btn">
+
+                            Cancel
+
+                        </a>
+
+                        <button type="submit"
+                                class="review-submit-btn">
+
+                            Submit Review
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/customer-dashboard.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/customer-sidebar.css"
+          asp-append-version="true" />
+
+}
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const stars = document.querySelectorAll(
+                ".review-stars label"
+            );
+
+            const inputs = document.querySelectorAll(
+                ".review-stars input"
+            );
+
+            const ratingText =
+                document.getElementById("rating-text");
+
+
+            const ratingNames = {
+                1: "Poor",
+                2: "Fair",
+                3: "Good",
+                4: "Very Good",
+                5: "Excellent"
+            };
+
+
+            function updateStars(value) {
+
+                stars.forEach(function (star) {
+
+                    const input =
+                        document.getElementById(
+                            star.getAttribute("for")
+                        );
+
+                    const starValue =
+                        parseInt(input.value);
+
+                    if (starValue <= value) {
+
+                        star.classList.add("active");
+
+                    } else {
+
+                        star.classList.remove("active");
+
+                    }
+
+                });
+
+
+                if (value > 0) {
+
+                    ratingText.textContent =
+                        value + " / 5 — " +
+                        ratingNames[value];
+
+                } else {
+
+                    ratingText.textContent =
+                        "Select a rating";
+
+                }
+
+            }
+
+
+            inputs.forEach(function (input) {
+
+                input.addEventListener("change", function () {
+
+                    updateStars(
+                        parseInt(this.value)
+                    );
+
+                });
+
+            });
+
+
+            stars.forEach(function (star) {
+
+                star.addEventListener("mouseenter", function () {
+
+                    const value =
+                        parseInt(
+                            document.getElementById(
+                                this.getAttribute("for")
+                            ).value
+                        );
+
+                    stars.forEach(function (hoverStar) {
+
+                        const hoverInput =
+                            document.getElementById(
+                                hoverStar.getAttribute("for")
+                            );
+
+                        const hoverValue =
+                            parseInt(hoverInput.value);
+
+                        if (hoverValue <= value) {
+
+                            hoverStar.classList.add("hover");
+
+                        } else {
+
+                            hoverStar.classList.remove("hover");
+
+                        }
+
+                    });
+
+                });
+
+
+                star.addEventListener("mouseleave", function () {
+
+                    stars.forEach(function (hoverStar) {
+
+                        hoverStar.classList.remove("hover");
+
+                    });
+
+                });
+
+            });
+
+
+            const checked =
+                document.querySelector(
+                    ".review-stars input:checked"
+                );
+
+            if (checked) {
+
+                updateStars(
+                    parseInt(checked.value)
+                );
+
+            }
+
+        });
+
+    </script>
+
+}

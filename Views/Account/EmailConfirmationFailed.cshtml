@@ -1,0 +1,47 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Email Verification Failed";
+    Layout = "_LandingLayout";
+}
+
+<div class="forgot-password-page">
+
+    <div class="forgot-password-card">
+
+        <div class="forgot-password-icon">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+
+
+        <div class="forgot-password-heading">
+
+            <h1>Verification Failed</h1>
+
+            <p>
+                We couldn't verify your EventBridge email address.
+            </p>
+
+        </div>
+
+
+        <div class="text-center">
+
+            <p class="text-muted mb-4">
+                The verification link may be invalid or expired.
+                Please try again with a valid verification link.
+            </p>
+
+            <a asp-action="CheckEmail"
+               asp-controller="Account"
+               class="btn forgot-submit-btn w-100">
+
+                <i class="fa-solid fa-rotate-right me-2"></i>
+                Return to Email Verification
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
